@@ -3,7 +3,7 @@
 import requests
 
 
-def api_category(category):  # class for API connexion
+def api_category(category):  # function for API connexion
     global API_URL, parameters, data
     API_URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
     ACTION = "process"
@@ -27,7 +27,7 @@ def api_category(category):  # class for API connexion
 
 
 listAllProduct = []
-LIST_CATEGORIES = ('pizza', 'sodas', 'saucisson', 'quiche')
+LIST_CATEGORIES = ('pizza', 'soda', 'saucisson', 'quiche')
 
 
 def main():
