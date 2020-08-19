@@ -1,3 +1,5 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
 import requests
 
 
@@ -31,13 +33,12 @@ LIST_CATEGORIES = ('pizza', 'sodas', 'saucisson', 'quiche')
 def main():
     # loop for each category
     for cate in LIST_CATEGORIES:
-        # we call on  fait 4 boucles (nombre de catégories)
-        api_category(cate)  # pour chaque boucle on appelle la fonction de connexion
-        listProduct = data['products']  # on integre les données dans une variable
-
+        # we call the function api_category for the API connection
+        api_category(cate)
+        # we put the dictionary to the list
+        listProduct = data['products']
+        # we create a global list with the data from all categories
         for row in listProduct:
-            # je parcours toutes les données de products
-            # print(x)
             listAllProduct.append(row)
     print(listAllProduct)
 
