@@ -15,16 +15,16 @@ class SQL:
         database="PUR_BEURRE"
     )
 
-curs = connection.cursor()
-# SQL request
-sql = "INSERT INTO Category (name, description) VALUES (%s, %s)"
-# data for the request
-value = ("Tutuuuuuaa", "21")
-# execute the SQL request
-curs.execute(sql, value)
-# validate the transaction
-connection.commit()
+    curs = connection.cursor()
+    # SQL request
+    sql = "INSERT INTO Category (name, description) VALUES (%s, %s)"
+    # data for the request
+    value = ("Tutuuuuuaa", "21")
+    # execute the SQL request
+    curs.execute(sql, value)
+    # validate the transaction
+    connection.commit()
 
-print(curs.rowcount, "ligne insérée.")
+    print(curs.rowcount, "ligne insérée.")
 
-connection.close()
+    connection.close()
