@@ -55,7 +55,7 @@ def main():
     # print(listAllProduct)
     # Call the function to create the list for the SQL integration
     ReqSql(listAllProduct)
-    # Call the function to save data to the database
+    # Call the function to save data to the database in the temporary table (TempoProduct)
     SQL_connection.ImportBdd(listSQl)
 
 
