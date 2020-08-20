@@ -1,9 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
+import SQL_connection
 
 
-def api_category(category):  # function for API connexion
+# function for API connexion
+def api_category(category):
     global API_URL, parameters, data
     API_URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
     ACTION = "process"
@@ -26,8 +28,18 @@ def api_category(category):  # function for API connexion
     data = res.json()
 
 
+# change the order of values and save in a list for the SQL upload
+def ReqSql(x):
+    for line in x:
+        tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"])
+        listSQl.append(tupleSql)
+    # print(listSQl)
+    return listSQl
+
+
 listAllProduct = []
-LIST_CATEGORIES = ('pizza', 'soda', 'saucisson', 'quiche')
+LIST_CATEGORIES = ('pizza', 'yaourt', 'saucisson', 'quiche')
+listSQl = []
 
 
 def main():
@@ -40,7 +52,11 @@ def main():
         # we create a global list with the data from all categories
         for row in listProduct:
             listAllProduct.append(row)
-    print(listAllProduct)
+    # print(listAllProduct)
+    # Call the function to create the list for the SQL integration
+    ReqSql(listAllProduct)
+    # Call the function to save data to the database
+    SQL_connection.ImportBdd(listSQl)
 
 
 if __name__ == '__main__':
