@@ -31,14 +31,14 @@ def api_category(category):
 # change the order of values and save in a list for the SQL upload
 def ReqSql(x):
     for line in x:
-        tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"])
+        tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"], line["categories"])
         listSQl.append(tupleSql)
     # print(listSQl)
     return listSQl
 
 
 listAllProduct = []
-LIST_CATEGORIES = ('pizza', 'yaourt', 'saucisson', 'quiche')
+LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
 listSQl = []
 
 
@@ -52,10 +52,10 @@ def main():
         # we create a global list with the data from all categories
         for row in listProduct:
             listAllProduct.append(row)
-    # print(listAllProduct)
+    #print(listAllProduct)
     # Call the function to create the list for the SQL integration
     ReqSql(listAllProduct)
-    # Call the function to save data to the database in the temporary table (TempoProduct)
+    # Call the function to save data to the database in the table (TProduct)
     SQL_connection.ImportBdd(listSQl)
 
 

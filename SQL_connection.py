@@ -24,7 +24,7 @@ def ImportBdd(req):
     )
     curs = connection.cursor()
     # SQL request
-    sql = "INSERT INTO TempoProduct (name, nutriscore, url, barcode, store) VALUES (%s, %s, %s, %s, %s)"
+    sql = "INSERT INTO Product (name, nutriscore, url, barcode, store, description) VALUES (%s, %s, %s, %s, %s, %s)"
     # execute the SQL request"""
     curs.executemany(sql, req)
     # validate the transaction
