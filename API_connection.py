@@ -31,7 +31,10 @@ def api_category(category):
 # change the order of values and save in a list for the SQL upload
 def ReqSql(x):
     for line in x:
-        tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"], line["categories"])
+        tupleSql = (
+            line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"],
+            line["categories"],
+            line["id_category"])
         listSQl.append(tupleSql)
     # print(listSQl)
     return listSQl
@@ -45,14 +48,16 @@ listSQl = []
 def main():
     # loop for each category
     for cate in LIST_CATEGORIES:
+        # to find the ID of the category in Category table
+        id_category = SQL_connection.IdCategory(cate)
         # we call the function api_category for the API connection
         api_category(cate)
         # we put the dictionary to the list
         listProduct = data['products']
-        # we create a global list with the data from all categories
+        # we create a global list with all dictionaries
         for row in listProduct:
+            row['id_category'] = id_category
             listAllProduct.append(row)
-    #print(listAllProduct)
     # Call the function to create the list for the SQL integration
     ReqSql(listAllProduct)
     # Call the function to save data to the database in the table (TProduct)
