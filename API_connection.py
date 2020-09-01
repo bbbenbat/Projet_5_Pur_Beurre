@@ -1,7 +1,15 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
-import SQL_connection
+# import SQL_connection
+import test2
+
+SQL_CONNECT = test2.Connection()
+
+listAllProduct = []
+LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
+listSQl = []
+descStore = []
 
 
 # function for API connexion
@@ -14,7 +22,7 @@ def api_category(category):
     TAG_0 = category
     JSON = "true"
     PAGE = 1
-    PAGE_SIZE = 10
+    PAGE_SIZE = 20
     FIELDS = "product_name,nutriscore_grade,code,url,categories,stores"
     parameters = {'action': ACTION,
                   'tagtype_0': TAGTYPE_0,
@@ -40,28 +48,37 @@ def ReqSql(x):
     return listSQl
 
 
-listAllProduct = []
-LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
-listSQl = []
+# create a liste with a tuple by store's categories
+def DescStore(x):
+    for line in x:
+        listStore = (line['stores'])
+        descStore.append(listStore.split(','))
+    #print("***-***", descStore)
+    return descStore
 
 
 def main():
     # loop for each category
     for cate in LIST_CATEGORIES:
         # to find the ID of the category in Category table
-        id_category = SQL_connection.IdCategory(cate)
+        id_category = SQL_CONNECT.IdCategory(cate)
         # we call the function api_category for the API connection
         api_category(cate)
         # we put the dictionary to the list
-        listProduct = data['products']
+        ApilistProduct = data['products']
         # we create a global list with all dictionaries
-        for row in listProduct:
+        for row in ApilistProduct:
             row['id_category'] = id_category
             listAllProduct.append(row)
+    # print(listAllProduct)
+    DescStore(listAllProduct)
+    SQL_CONNECT.ImportStore(descStore)
     # Call the function to create the list for the SQL integration
-    ReqSql(listAllProduct)
+    aze = ReqSql(listAllProduct)
+    #print("**__**",aze)
     # Call the function to save data to the database in the table (TProduct)
-    SQL_connection.ImportBdd(listSQl)
+    # SQL_connection.ImportBdd(listSQl)
+    SQL_CONNECT.ImportBdd(aze)
 
 
 if __name__ == '__main__':
