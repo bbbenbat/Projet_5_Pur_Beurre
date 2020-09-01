@@ -1,8 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
-# import SQL_connection
-import test2
+import SQL_connection
+
 
 SQL_CONNECT = test2.Connection()
 
@@ -70,12 +70,10 @@ def main():
         for row in ApilistProduct:
             row['id_category'] = id_category
             listAllProduct.append(row)
-    # print(listAllProduct)
     DescStore(listAllProduct)
     SQL_CONNECT.ImportStore(descStore)
     # Call the function to create the list for the SQL integration
     aze = ReqSql(listAllProduct)
-    #print("**__**",aze)
     # Call the function to save data to the database in the table (TProduct)
     # SQL_connection.ImportBdd(listSQl)
     SQL_CONNECT.ImportBdd(aze)
