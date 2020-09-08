@@ -3,8 +3,7 @@
 import requests
 import SQL_connection
 
-
-SQL_CONNECT = test2.Connection()
+SQL_CONNECT = SQL_connection.Connection()
 
 listAllProduct = []
 LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
@@ -12,6 +11,7 @@ listSQl = []
 descStore = []
 
 
+"""
 # function for API connexion
 def api_category(category):
     global API_URL, parameters, data
@@ -81,3 +81,5 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+"""
