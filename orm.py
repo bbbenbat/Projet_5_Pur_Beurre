@@ -29,41 +29,13 @@ class Category(BaseModel):
 class Product(BaseModel):
     barcode = CharField(null=True, unique=True)
     id_category = ForeignKeyField(column_name='id_category', field='id', model=Category, null=True)
+    ingredient = CharField(null=True)
     name = CharField(null=True)
     nutriscore = CharField(null=True)
     url = CharField(null=True)
 
     class Meta:
         table_name = 'product'
-
-
-class Consultation(BaseModel):
-    best_product = IntegerField(null=True)
-    date = DateTimeField(null=True)
-    id_product = ForeignKeyField(backref='product_id_product_set', column_name='id_product', field='id', model=Product,
-                                 null=True)
-
-    class Meta:
-        table_name = 'consultation'
-
-
-class Description(BaseModel):
-    name = CharField(null=True, unique=True)
-
-    class Meta:
-        table_name = 'description'
-
-
-class ProductDescription(BaseModel):
-    description = ForeignKeyField(column_name='description_id', field='id', model=Description)
-    product = ForeignKeyField(column_name='product_id', field='id', model=Product)
-
-    class Meta:
-        table_name = 'product_description'
-        indexes = (
-            (('product', 'description'), True),
-        )
-        primary_key = CompositeKey('description', 'product')
 
 
 class Store(BaseModel):
@@ -85,6 +57,16 @@ class ProductStore(BaseModel):
         primary_key = CompositeKey('product', 'store')
 
 
+class Research(BaseModel):
+    date = DateTimeField(null=True)
+    id_product = ForeignKeyField(backref='product_id_product_set', column_name='id_product', field='id', model=Product,
+                                 null=True)
+    id_product_best = IntegerField(null=True)
+
+    class Meta:
+        table_name = 'research'
+
+
 class CreateTable(BaseModel):
     """WARNING : Delete et Create all tables of PUR_BEURRE Database!!!"""
     database.connect()
@@ -92,11 +74,10 @@ class CreateTable(BaseModel):
     database.create_tables([Category, Product, Consultation, Description, ProductDescription, Store, ProductStore])
     # We save the categories of API_connection file to Category table
     for cat in API.LIST_CATEGORIES:
-        print(cat)
+        # print(cat)
         cate = Category(name=cat)
         cate.save()
     database.close()
 
-
-CreateTable()
+# CreateTable()
 # CreateTable.category_table()
