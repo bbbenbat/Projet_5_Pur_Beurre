@@ -1,25 +1,36 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import requests
-import SQL_connection
+import tools
 
-SQL_CONNECT = SQL_connection.Connection()
+# import orm_request
+
 
 listAllProduct = []
-LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
+# LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
+# LIST_CATEGORIES = ('pizza au thon', 'pizza vegetarienne', 'pizza au fromage', 'pizza au poulet')
 listSQl = []
-descStore = []
 
 
-"""
+
+def list_categories():
+    global LIST_CATEGORIES
+    category_1 = 'pizza au thon'
+    category_2 = 'pizza aux legumes'
+    category_3 = 'pizza au fromage'
+    category_4 = 'pizza au jambon'
+    LIST_CATEGORIES = (category_1, category_2, category_3, category_4)
+    return LIST_CATEGORIES
+
+
 # function for API connexion
-def api_category(category):
+def api_category(categ):
     global API_URL, parameters, data
     API_URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
     ACTION = "process"
     TAGTYPE_0 = "categories"
     TAG_CONTAINS_0 = "contains"
-    TAG_0 = category
+    TAG_0 = categ
     JSON = "true"
     PAGE = 1
     PAGE_SIZE = 20
@@ -33,53 +44,40 @@ def api_category(category):
                   'page_size': PAGE_SIZE,
                   'fields': FIELDS}
     res = requests.get(API_URL, parameters)
-    data = res.json()
+    data_api = res.json()
+    return data_api
+
 
 
 # change the order of values and save in a list for the SQL upload
 def ReqSql(x):
+    fr_ing = 0
+    en_ing = 0
     for line in x:
-        tupleSql = (
-            line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"],
-            line["categories"],
-            line["id_category"])
-        listSQl.append(tupleSql)
-    # print(listSQl)
+        # tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"], line["categories"], line["id_category"])
+        if 'ingredients_text_fr' in line.keys():
+            ingredients = tools.rp2cara(line["ingredients_text_fr"],'(',')','/')
+            #print(line["ingredients_text_fr"])
+            tupleSql = (
+            line["product_name"], line["nutriscore_grade"], line["url"], line["code"], ingredients,
+            line["id_category"], line["stores"])
+            listSQl.append(tupleSql)
+            fr_ing += 1
+        else:
+            ingredients = tools.rp2cara(line["ingredients_text_en"], '(', ')', '/')
+            print(ingredients)
+            tupleSql = (
+            line["product_name"], line["nutriscore_grade"], line["url"], line["code"], ingredients,
+            line["id_category"], line["stores"])
+            listSQl.append(tupleSql)
+            print("------",ingredients)
+            en_ing += 1
+    print("FR : ", fr_ing, "EN : ", en_ing)
+    print("liste pour insertion sql", listSQl)
     return listSQl
 
 
-# create a liste with a tuple by store's categories
-def DescStore(x):
-    for line in x:
-        listStore = (line['stores'])
-        descStore.append(listStore.split(','))
-    #print("***-***", descStore)
-    return descStore
 
 
-def main():
-    # loop for each category
-    for cate in LIST_CATEGORIES:
-        # to find the ID of the category in Category table
-        id_category = SQL_CONNECT.IdCategory(cate)
-        # we call the function api_category for the API connection
-        api_category(cate)
-        # we put the dictionary to the list
-        ApilistProduct = data['products']
-        # we create a global list with all dictionaries
-        for row in ApilistProduct:
-            row['id_category'] = id_category
-            listAllProduct.append(row)
-    DescStore(listAllProduct)
-    SQL_CONNECT.ImportStore(descStore)
-    # Call the function to create the list for the SQL integration
-    aze = ReqSql(listAllProduct)
-    # Call the function to save data to the database in the table (TProduct)
-    # SQL_connection.ImportBdd(listSQl)
-    SQL_CONNECT.ImportBdd(aze)
 
 
-if __name__ == '__main__':
-    main()
-
-"""
