@@ -6,35 +6,26 @@ import API_connection
 import tools
 
 API_LIST = API_connection.list_categories()
+select_cat = []
+select_sub_cat = {}
 
-
-# print(A)
-# database.connect()
+"""
 def list_cat():
     for cat in Category.select().order_by(Category.id.asc()):
         print(cat.id, cat.name)
-
+"""
 
 def id_category(cat):
+    """ Give the id of each category of Category table.
+    Used in start_init."""
     id_cat = Category.get(Category.name == cat).id
     print(id_cat)
     return id_cat
 
 
-def list_prod(x):
-    for prod in Product.select().where(Product.id_category == 1):
-        print(prod.id, "|", prod.name)
-
-
-def import_bdd(req):
-    """ This class sends the data to the Product Table """
-    print("*/*", req)
-    Product.insert_many(req, fields=[Product.name, Product.nutriscore, Product.url, Product.barcode, Product.ingredient,
-                                     Product.id_category]).execute()
-
-
 def create_cat():
-    """ Create categories selected on API connexion, in Category table."""
+    """ Create categories selected on API connexion, in Category table.
+    Used in start_init."""
     for req in API_LIST:
         try:
             Category.insert(name=req).execute()
@@ -43,7 +34,8 @@ def create_cat():
 
 
 def create_table():
-    """WARNING : Delete et Create all tables of PUR_BEURRE Database!!!"""
+    """WARNING : Delete et Create all tables of PUR_BEURRE Database!!!
+    Used in start_init."""
     # database.connect()
     database.drop_tables([Category, Product, Research, Store, ProductStore])
     database.create_tables([Category, Product, Research, Store, ProductStore])
@@ -51,6 +43,8 @@ def create_table():
 
 
 def check_data(list):
+    """ Check and save API's data to the database.
+    Used in start_init."""
     for line in list:
         ### Product section
         # if product is not in the table (check with name and barcode)
@@ -62,12 +56,13 @@ def check_data(list):
             # save product
             exe_pr = Product.insert(name=line[0], nutriscore=line[1], url=line[2],
                                     barcode=line[3], ingredient=line[4],
-                                    id_category=line[5])
+                                    id_category=line[5], categories_hierarchy=line[7])
             # save the Product id on the new product
             id_pr = exe_pr.execute()
             ### Store section
-            # check_s = line[6]
-            check_st = tools.splite_tuple_to_liste(line[6])
+            print(line[6])
+            # check_st = tools.splite_tuple_to_liste(line[6])
+            check_st = line[6]
             # print(">",check_st)
             # if there is a store with the product
             if check_st is not None:
@@ -90,5 +85,47 @@ def check_data(list):
                     except:
                         print("Erreur sur :", id_pr, id_st)
 
+
+def select_category():
+    """ Give the categories regarding the subcategories of the database.
+     The categories are the first word of the subcategories.
+     Used in console."""
+    aze = Category.select()
+    for cat in aze:
+        cate = cat.name.split()[:1]
+        if cate[0] in select_cat:
+            pass
+        else:
+            select_cat.append(cate[0])
+    for cat in enumerate(select_cat):
+        print(cat[0], cat[1])
+    return select_cat
+
+
+def select_sub_category(req):
+    """ Give the subcategories regarding the category selected(req).
+    Used in console."""
+    aze = Category.select().where(Category.name.iregexp(req))
+    for sub in aze:
+        # print(sub)
+        select_sub_cat.update({sub.id: sub.name})
+        # print(select_sub_cat)
+    for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
+        print(sub_cat[0], sub_cat[1])
+    return select_sub_cat
+
+
+def list_prod(req):
+    """ Give the bests product, selected by nutriscore value.
+    Used in console."""
+    x = 1
+    print(">>> >>>", req)
+    produ = Product.select().where(Product.id_category == 9).order_by(Product.nutriscore.asc())
+    for prod in produ:
+        print("Choix numéro", x, ":", prod.name, ", score nutritionnel : ", prod.nutriscore)
+        x += 1
+
+# list_prod(9)
+# select_sub_category()
 # create_table()
 # create_cat()

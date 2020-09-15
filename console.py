@@ -1,8 +1,13 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import SQL_connection
+from peewee import *
+import orm_request
+from orm_data import Category, Product, Research, Product, Store, ProductStore, database as database
+from tools import ask_integer
 
-SQL_connection.connect()
+#SQL_connection.connect()
+ORMR = orm_request
+
 
 
 def user_input():
@@ -19,14 +24,19 @@ def main():
         user_input()
         if sel_welcome == 1:
             while True:
-                SQL_connection.ListCat()
-                sel_cat = int(input("Entrer le numéro de catégorie que vous recherchez :\n"))
-                if sel_cat >= 1 and sel_cat <= 4:
+                select_cat = ORMR.select_category()
+                ask_integer("Catégorie", 0, )
+                user_cat = int(input("Entrer le numéro de catégorie que vous recherchez :\n"))
+                check = 4 #Category.select(fn.COUNT(Category.id))
+                if user_cat >= 0 and user_cat <= check:
                     while True:
-                        SQL_connection.ListProd(sel_cat)
-                        sel_product = int(input("Entrer le numéro du produit que vous recherchez :\n"))
+                        print("categorie selectionnee : ",select_cat[user_cat])
+                        select_sub_cat = ORMR.select_sub_category(select_cat[user_cat])
+                        #ORMR.list_prod(sel_cat)
+                        user_prod = int(input("Entrer le numéro du produit que vous recherchez :\n"))
                         try:
-                            print("Affichage produit de substitution")
+                            print("saisie user pour le numéro de produit :", user_prod)
+                            prod = ORMR.list_prod(user_prod)
                             break
                         except:
                             print("Veuillez entrer un chiffre correspondant à un produit!")

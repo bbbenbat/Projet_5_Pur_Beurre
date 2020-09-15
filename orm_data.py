@@ -31,6 +31,7 @@ class Product(BaseModel):
     name = CharField(null=True)
     nutriscore = CharField(null=True)
     url = CharField(null=True)
+    categories_hierarchy = CharField(null=False)
 
     class Meta:
         table_name = 'product'
