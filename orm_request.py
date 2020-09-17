@@ -108,20 +108,23 @@ def select_sub_category(req):
     """ Give the subcategories regarding the category selected(req).
     Used in console."""
     select_sub_cat = {}
-    print("POUR LA CATEGORIE", req)
+    min_sub_cat = []
+    print("POUR LA CATEGORIE", req, ":")
     ssub_cat = Category.select().where(Category.name.iregexp(req))
     # print("REQUETE SQL NOM CATEGORIE",ssub_cat)
     for sub in ssub_cat:
         select_sub_cat.update({sub.id: sub.name})
     for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
         print(sub_cat[0], sub_cat[1])
-    return select_sub_cat
+        min_sub_cat.append(sub_cat[0])
+    return select_sub_cat, min_sub_cat[0], min_sub_cat[-1]
 
 
 def list_prod(req):
     """ Give the bests product, selected by nutriscore value.
     Used in console."""
     x = 1
+    y = x
     dico_product = {}
     # print(">>> >>>", req)
     produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
@@ -133,8 +136,9 @@ def list_prod(req):
               prod.ingredient, "\n======================================================")
         dico_product.update({x: prod.id})
         x += 1
-    return dico_product
+    return dico_product, y, x
 
+#list_prod(5)
 
 def find_store(req):
     list_store = []
@@ -150,12 +154,20 @@ def find_store(req):
     return str(list_store).strip('[]')
 
 
-def save_user_select(req, req1):
+def save_user_select(req, req1, req2, req3 ):
     # req is the dict of best products
     # req1 is the subcategory selected by user
     # choice is the best product selected by user
+    x = 0
     choice = int(input("Quel produit souhaitez-vous sauvegarder?"))
-    Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
+    print("---------",choice)
+    while x == 0:
+        if req2 <= choice < req3:
+            Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
+            print("Sélection sauvegardée!\n")
+            x = 1
+        else:
+            print("Veuillez entrer un chiffre compris entre ",req2," et ",req3)
 
 # Ask to user which product must be saved
 # Save the research to Research table
