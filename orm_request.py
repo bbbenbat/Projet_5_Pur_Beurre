@@ -3,6 +3,7 @@
 from peewee import *
 from orm_data import Category, Research, Product, Store, ProductStore, database
 import API_connection
+from datetime import datetime
 import tools
 
 API_LIST = API_connection.list_subcategories()
@@ -114,21 +115,25 @@ def select_sub_category(req):
         select_sub_cat.update({sub.id: sub.name})
     for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
         print(sub_cat[0], sub_cat[1])
+    return select_sub_cat
 
 
 def list_prod(req):
     """ Give the bests product, selected by nutriscore value.
     Used in console."""
     x = 1
+    dico_product = {}
     # print(">>> >>>", req)
     produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
     for prod in produ:
-        #print("---**---", prod.id)
+        # print("---**---", prod.id)
         List_store = find_store(prod.id)
         print("Choix numéro", x, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store, "| Lien :",
               prod.url, "| \n ==> description :",
-              prod.ingredient)
+              prod.ingredient, "\n======================================================")
+        dico_product.update({x: prod.id})
         x += 1
+    return dico_product
 
 
 def find_store(req):
@@ -144,8 +149,18 @@ def find_store(req):
     # Return list of values without []
     return str(list_store).strip('[]')
 
-""""def save_to_db(req):
-    if req"""
+
+def save_user_select(req, req1):
+    # req is the dict of best products
+    # req1 is the subcategory selected by user
+    # choice is the best product selected by user
+    choice = int(input("Quel produit souhaitez-vous sauvegarder?"))
+    Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
+
+# Ask to user which product must be saved
+# Save the research to Research table
+
+
 # find_store(1)
 # list_prod(9)
 # select_sub_category()

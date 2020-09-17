@@ -3,11 +3,10 @@
 from peewee import *
 import tools
 
-database = tools.pwd()
-#database = MySQLDatabase('PUR_BEURRE',
-#                         **{'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'user': 'ocr',
-#                            'password': passwo})
 
+database = tools.pwd()
+# Database is the Mysql connector to Pur Beurre database.
+# pwd function is used to secure the Mysql password of DB
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
