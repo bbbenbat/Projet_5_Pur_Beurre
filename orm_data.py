@@ -1,11 +1,12 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from peewee import *
-import API_connection
+import tools
 
-database = MySQLDatabase('PUR_BEURRE',
-                         **{'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'user': 'ocr',
-                            'password': 'Python2020'})
+database = tools.pwd()
+#database = MySQLDatabase('PUR_BEURRE',
+#                         **{'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True, 'user': 'ocr',
+#                            'password': passwo})
 
 
 class UnknownField(object):
@@ -53,7 +54,7 @@ class ProductStore(BaseModel):
         indexes = (
             (('product', 'store'), True),
         )
-        #primary_key = CompositeKey('product', 'store')
+        # primary_key = CompositeKey('product', 'store')
 
 
 class Research(BaseModel):
@@ -64,9 +65,3 @@ class Research(BaseModel):
 
     class Meta:
         table_name = 'research'
-
-
-
-
-
-

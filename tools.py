@@ -1,3 +1,9 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+import getpass
+from peewee import *
+
+
 def ask_integer(name, max_int, min_int=0):
     assert type(name) == str
     assert type(min_int) == int
@@ -24,11 +30,37 @@ def rp2cara(req, x, y, z):
     return req
 
 
-# create a liste with a tuple by store's categories
 def splite_tuple_to_liste(x):
+    # create a liste with a tuple by store's categories
     list_s = []
     list_s = (x.split(','))
     # print("***-***", descStore)
     return list_s
 
 
+def check_connection_db(req):
+    try:
+        database = MySQLDatabase('PUR_BEURRE',
+                              **{'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True,
+                                 'user': 'ocr',
+                                 'password': req})
+        database.connect()
+        return database
+    except:
+        print("Mot de passe incorrect!\n")
+
+
+def pwd():
+    """ To have the password of Pur Beurre database. """
+    passwo = 0
+    while passwo == 0:
+        passwo = input("Veuillez saisir le mot de passe de connexion:\n")
+        check = check_connection_db(passwo)
+        if check is None:
+            passwo = 0
+        else:
+            return check
+
+
+
+#pwd()

@@ -1,11 +1,11 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from peewee import *
-from orm_data import Category, Product, Research, Product, Store, ProductStore, database as database
+from orm_data import Category, Research, Product, Store, ProductStore, database
 import API_connection
 import tools
 
-API_LIST = API_connection.list_categories()
+API_LIST = API_connection.list_subcategories()
 select_cat = []
 select_sub_cat = {}
 
@@ -14,6 +14,7 @@ def list_cat():
     for cat in Category.select().order_by(Category.id.asc()):
         print(cat.id, cat.name)
 """
+
 
 def id_category(cat):
     """ Give the id of each category of Category table.
@@ -90,8 +91,8 @@ def select_category():
     """ Give the categories regarding the subcategories of the database.
      The categories are the first word of the subcategories.
      Used in console."""
-    aze = Category.select()
-    for cat in aze:
+    s_cat = Category.select()
+    for cat in s_cat:
         cate = cat.name.split()[:1]
         if cate[0] in select_cat:
             pass
@@ -105,26 +106,47 @@ def select_category():
 def select_sub_category(req):
     """ Give the subcategories regarding the category selected(req).
     Used in console."""
-    aze = Category.select().where(Category.name.iregexp(req))
-    for sub in aze:
-        # print(sub)
+    select_sub_cat = {}
+    print("POUR LA CATEGORIE", req)
+    ssub_cat = Category.select().where(Category.name.iregexp(req))
+    # print("REQUETE SQL NOM CATEGORIE",ssub_cat)
+    for sub in ssub_cat:
         select_sub_cat.update({sub.id: sub.name})
-        # print(select_sub_cat)
     for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
         print(sub_cat[0], sub_cat[1])
-    return select_sub_cat
 
 
 def list_prod(req):
     """ Give the bests product, selected by nutriscore value.
     Used in console."""
     x = 1
-    print(">>> >>>", req)
-    produ = Product.select().where(Product.id_category == 9).order_by(Product.nutriscore.asc())
+    # print(">>> >>>", req)
+    produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
     for prod in produ:
-        print("Choix numéro", x, ":", prod.name, ", score nutritionnel : ", prod.nutriscore)
+        #print("---**---", prod.id)
+        List_store = find_store(prod.id)
+        print("Choix numéro", x, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store, "| Lien :",
+              prod.url, "| \n ==> description :",
+              prod.ingredient)
         x += 1
 
+
+def find_store(req):
+    list_store = []
+    query = (ProductStore
+             .select()
+             .join(Product, JOIN.INNER)
+             .switch(ProductStore)
+             .join(Store, JOIN.INNER)
+             .where(ProductStore.product == req))
+    for row in query:
+        list_store.append(row.store.name)
+    # Return list of values without []
+    return str(list_store).strip('[]')
+
+""""def save_to_db(req):
+    if req"""
+# find_store(1)
 # list_prod(9)
 # select_sub_category()
 # create_table()

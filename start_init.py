@@ -10,7 +10,7 @@ def main():
     # loop for each category
     ORMR.create_table()
     ORMR.create_cat()
-    for cate in APIC.list_categories():
+    for cate in APIC.list_subcategories():
         # to find the ID of the category in Category table
         id_category = ORMR.id_category(cate)
         # we call the function api_category for the API connection

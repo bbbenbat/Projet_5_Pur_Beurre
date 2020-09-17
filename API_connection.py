@@ -3,17 +3,13 @@
 import requests
 import tools
 
-# import orm_request
-
-
 listAllProduct = []
-# LIST_CATEGORIES = ('pizza', 'pain-de-mie', 'saucisson', 'quiche')
-# LIST_CATEGORIES = ('pizza au thon', 'pizza vegetarienne', 'pizza au fromage', 'pizza au poulet')
 listSQl = []
 
 
-def list_categories():
-    global LIST_CATEGORIES
+def list_subcategories():
+    """  """
+    global LIST_SUBCATEGORIES
     category_1 = 'pizza au thon'
     category_2 = 'pizza aux legumes'
     category_3 = 'pizza au fromage'
@@ -30,14 +26,14 @@ def list_categories():
     category_14 = 'jus d orange'
     category_15 = 'jus de raisin'
     category_16 = 'jus d ananas'
-    LIST_CATEGORIES = (
+    LIST_SUBCATEGORIES = (
         category_1, category_2, category_3, category_4, category_5, category_6, category_7, category_8, category_9,
         category_10, category_11, category_12, category_13, category_14, category_15, category_16)
-    return LIST_CATEGORIES
+    return LIST_SUBCATEGORIES
 
 
-# function for API connexion
 def api_category(categ):
+    # function for API connexion
     global API_URL, parameters, data
     API_URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
     ACTION = "process"
@@ -61,12 +57,11 @@ def api_category(categ):
     return data_api
 
 
-# change the order of values and save in a list for the SQL upload
 def ReqSql(x):
+    # change the order of values and save in a list for the SQL upload
     fr_ing = 0
     en_ing = 0
     for line in x:
-        # tupleSql = (line["product_name"], line["nutriscore_grade"], line["url"], line["code"], line["stores"], line["categories"], line["id_category"])
         if 'ingredients_text_fr' in line.keys():
             ingredients = tools.rp2cara(line["ingredients_text_fr"], '(', ')', '/')
             # print(line["ingredients_text_fr"])
@@ -77,12 +72,12 @@ def ReqSql(x):
             fr_ing += 1
         else:
             ingredients = tools.rp2cara(line["ingredients_text_en"], '(', ')', '/')
-            print(ingredients)
+            #print(ingredients)
             tupleSql = (
                 line["product_name"], line["nutrition_grades_tags"][0], line["url"], line["code"], ingredients,
                 line["id_category"], line["stores_tags"], line["categories_hierarchy"])
             listSQl.append(tupleSql)
-            print("------", ingredients)
+            #print("------", ingredients)
             en_ing += 1
     print("FR : ", fr_ing, "EN : ", en_ing)
     print("liste pour insertion sql", listSQl)
