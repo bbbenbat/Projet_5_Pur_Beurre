@@ -3,11 +3,10 @@
 from peewee import *
 import tools
 
-database = tools.pwd()
-
-
 # Database is the Mysql connector to Pur Beurre database.
 # pwd function is used to secure the Mysql password of DB
+database = tools.pwd()
+
 
 class UnknownField(object):
     def __init__(self, *_, **__): pass
@@ -19,6 +18,8 @@ class BaseModel(Model):
 
 
 class Category(BaseModel):
+    """ Category table
+    Columns : id, name"""
     name = CharField(null=True, unique=True)
 
     class Meta:
@@ -26,6 +27,8 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
+    """ Product table
+     Columns : id, barcode, categories_hierarchy, id_category, ingredient, name, nutriscore, url"""
     barcode = CharField(null=True)
     categories_hierarchy = CharField()
     id_category = ForeignKeyField(column_name='id_category', field='id', model=Category, null=True)
@@ -63,6 +66,3 @@ class Research(BaseModel):
 
     class Meta:
         table_name = 'research'
-
-
-

@@ -158,7 +158,9 @@ def save_user_select(req, req1, req2, req3):
      choice is the best product selected by user """
     x = 0
     while x == 0:
-        choice = int(input("Quel produit souhaitez-vous sauvegarder?\n"))
+        choice = int(input("=============================================\n"
+                           "= Quel produit souhaitez-vous sauvegarder ? =\n"
+                           "=============================================\n"))
         if req2 <= choice <= req3:
             Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
             print("Sélection sauvegardée!\n")
@@ -170,22 +172,24 @@ def save_user_select(req, req1, req2, req3):
 def read_research():
     print("==================================================================")
     for row in Research \
-            .select(Research.id_product, Research.id_product_best, Product.name.alias('product'), Category.name.alias('subcat'),
+            .select(Research.id_product, Research.id_product_best, Product.name.alias('product'),
+                    Category.name.alias('subcat'),
                     Research.date) \
             .join(Product) \
             .switch(Research) \
             .join(Category) \
+            .order_by(Research.date) \
             .dicts():
-        print(row["date"], "|| Product researched :", row['subcat'], "|| Product saved :", row['product'])
-    print("==================================================================")
+        print(
+            row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'])
+        print("==================================================================")
 
+        # read_research()
+    # Ask to user which product must be saved
+    # Save the research to Research table
 
-#read_research()
-# Ask to user which product must be saved
-# Save the research to Research table
-
-# find_store(1)
-# list_prod(9)
-# select_sub_category()
-# create_table()
-# create_cat()
+    # find_store(1)
+    # list_prod(9)
+    # select_sub_category()
+    # create_table()
+    # create_cat()

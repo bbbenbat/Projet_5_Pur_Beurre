@@ -10,16 +10,18 @@ ORMR = orm_request
 
 
 def user_input():
-    print("Bienvenue sur l'application PurBeurre!\n")
     global sel_welcome
-    sel_welcome = int(input("Que souhaitez-vous faire ?\n"
+    sel_welcome = int(input("==============================\n"
+                            "= Que souhaitez-vous faire ? =\n"
+                            "==============================\n"
                             "Avoir un produit de remplacement plus sain : tapez 1\n"
-                            "Voir mon historique de recherche : tape |2|\n"
+                            "Voir mon historique de recherche : tape 2\n"
                             ))
     return sel_welcome
 
 
 def main():
+    print("Bienvenue sur l'application PurBeurre!")
     main_page = 0
     while main_page == 0:
         start_page = 0
@@ -42,10 +44,12 @@ def main():
                                 prod = ORMR.list_prod(user_prod)
                                 user_choice = int(input(
                                     """
-                                    => Que souhaitez-vous faire?\n 
-                                    - Sauvegarder un produit proposé : taper 1\n 
-                                    - Faire une autre recherche produit : taper 2\n 
-                                    - Retourner à l'écran principal : taper 3\n"""))
+                                    ==============================
+                                    = Que souhaitez-vous faire ? =
+                                    ==============================
+                                    - Sauvegarder un produit proposé : taper 1 
+                                    - Faire une autre recherche produit : taper 2 
+                                    - Retourner à l'écran principal : taper 3"""))
                                 if user_choice == 1:
                                     # Ask to user which product must be saved
                                     # Save the research to Research table
