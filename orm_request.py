@@ -92,6 +92,7 @@ def select_category():
     """ Give the categories regarding the subcategories of the database.
      The categories are the first word of the subcategories.
      Used in console."""
+    print("CATEGORIES:")
     s_cat = Category.select()
     for cat in s_cat:
         cate = cat.name.split()[:1]
@@ -123,22 +124,19 @@ def select_sub_category(req):
 def list_prod(req):
     """ Give the bests product, selected by nutriscore value.
     Used in console."""
-    x = 1
-    y = x
+    z = 1
+    y = z
     dico_product = {}
-    # print(">>> >>>", req)
     produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
     for prod in produ:
-        # print("---**---", prod.id)
         List_store = find_store(prod.id)
-        print("Choix numéro", x, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store, "| Lien :",
+        print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store, "| Lien :",
               prod.url, "| \n ==> description :",
               prod.ingredient, "\n======================================================")
-        dico_product.update({x: prod.id})
-        x += 1
-    return dico_product, y, x
+        dico_product.update({z: prod.id})
+        z += 1
+    return dico_product, y, z - 1
 
-#list_prod(5)
 
 def find_store(req):
     list_store = []
@@ -154,24 +152,37 @@ def find_store(req):
     return str(list_store).strip('[]')
 
 
-def save_user_select(req, req1, req2, req3 ):
-    # req is the dict of best products
-    # req1 is the subcategory selected by user
-    # choice is the best product selected by user
+def save_user_select(req, req1, req2, req3):
+    """ req is the dict of best products
+     req1 is the subcategory selected by user
+     choice is the best product selected by user """
     x = 0
-    choice = int(input("Quel produit souhaitez-vous sauvegarder?"))
-    print("---------",choice)
     while x == 0:
-        if req2 <= choice < req3:
+        choice = int(input("Quel produit souhaitez-vous sauvegarder?\n"))
+        if req2 <= choice <= req3:
             Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
             print("Sélection sauvegardée!\n")
             x = 1
         else:
-            print("Veuillez entrer un chiffre compris entre ",req2," et ",req3)
+            print("Veuillez entrer un chiffre compris entre ", req2, " et ", req3)
 
+
+def read_research():
+    print("==================================================================")
+    for row in Research \
+            .select(Research.id_product, Research.id_product_best, Product.name.alias('product'), Category.name.alias('subcat'),
+                    Research.date) \
+            .join(Product) \
+            .switch(Research) \
+            .join(Category) \
+            .dicts():
+        print(row["date"], "|| Product researched :", row['subcat'], "|| Product saved :", row['product'])
+    print("==================================================================")
+
+
+#read_research()
 # Ask to user which product must be saved
 # Save the research to Research table
-
 
 # find_store(1)
 # list_prod(9)

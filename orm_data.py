@@ -3,8 +3,9 @@
 from peewee import *
 import tools
 
-
 database = tools.pwd()
+
+
 # Database is the Mysql connector to Pur Beurre database.
 # pwd function is used to secure the Mysql password of DB
 
@@ -25,13 +26,13 @@ class Category(BaseModel):
 
 
 class Product(BaseModel):
-    barcode = CharField(null=True, unique=False)
+    barcode = CharField(null=True)
+    categories_hierarchy = CharField()
     id_category = ForeignKeyField(column_name='id_category', field='id', model=Category, null=True)
     ingredient = CharField(null=True)
     name = CharField(null=True)
     nutriscore = CharField(null=True)
     url = CharField(null=True)
-    categories_hierarchy = CharField(null=False)
 
     class Meta:
         table_name = 'product'
@@ -53,14 +54,15 @@ class ProductStore(BaseModel):
         indexes = (
             (('product', 'store'), True),
         )
-        # primary_key = CompositeKey('product', 'store')
 
 
 class Research(BaseModel):
     date = DateTimeField(null=True)
-    id_product = ForeignKeyField(backref='product_id_product_set', column_name='id_product', field='id', model=Product,
-                                 null=True)
-    id_product_best = IntegerField(null=True)
+    id_product = ForeignKeyField(column_name='id_product', field='id', model=Category, null=True)
+    id_product_best = ForeignKeyField(column_name='id_product_best', field='id', model=Product, null=True)
 
     class Meta:
         table_name = 'research'
+
+
+

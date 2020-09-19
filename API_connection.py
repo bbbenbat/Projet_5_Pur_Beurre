@@ -42,7 +42,7 @@ def api_category(categ):
     TAG_0 = categ
     JSON = "true"
     PAGE = 1
-    PAGE_SIZE = 5
+    PAGE_SIZE = 50
     FIELDS = "product_name,nutrition_grades_tags,code,url,categories,stores_tags,categories_hierarchy"
     parameters = {'action': ACTION,
                   'tagtype_0': TAGTYPE_0,
