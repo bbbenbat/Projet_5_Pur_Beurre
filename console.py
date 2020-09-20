@@ -25,24 +25,30 @@ def user_input():
 def main():
     print("Bienvenue sur l'application PurBeurre!")
     main_page = 0
+    # While application is started
     while main_page == 0:
         start_page = 0
         while start_page == 0:
             user_input()
             # sel_welcome = 0
             search_page = 0
+            # If user selects a choice.
             if sel_welcome == 1:
                 while search_page == 0:
                     start_page = 0
+                    # Print category.
                     select_cate = ORMR.select_category()
+                    # Number of categories.
                     last_select_cat = len(select_cate) - 1
                     user_cat = int(input("=> Entrer le numéro de catégorie que vous recherchez :\n"))
                     if user_cat >= 0 and user_cat <= last_select_cat:
                         while start_page == 0:
+                            # Give the subcategories regarding the category selected.
                             sub_categ = ORMR.select_sub_category(select_cate[user_cat])
                             user_prod = int(input("=> Entrer le numéro du produit que vous recherchez :\n"))
                             check_input = 0
                             while sub_categ[1] <= user_prod <= sub_categ[2] and check_input == 0:
+                                # Give the bests product, selected by nutriscore value.
                                 prod = ORMR.list_prod(user_prod)
                                 user_choice = int(input(
                                     """
@@ -51,7 +57,7 @@ def main():
                                     ==============================
                                     - Sauvegarder un produit proposé : taper 1 
                                     - Faire une autre recherche produit : taper 2 
-                                    - Retourner à l'écran principal : taper 3"""))
+                                    - Retourner à l'écran principal : taper 3\n"""))
                                 if user_choice == 1:
                                     # Ask to user which product must be saved
                                     # Save the research to Research table
@@ -70,20 +76,20 @@ def main():
                                     start_page = 1
                                     search_page = 1
                                 else:
-                                    print("!!! Veuillez entrer un chiffre compris entre 1 et 3 !!!")
+                                    print("!!! Veuillez entrer un chiffre compris entre 1 et 3 !!!\n")
                             else:
                                 if check_input == 1:
                                     pass
                                 else:
-                                    print("!!! Veuillez entrer un chiffre correspondant à un produit!!!")
+                                    print("!!! Veuillez entrer un chiffre correspondant à un produit!!!\n")
                     else:
-                        print("!!! Veuillez entrer un chiffre correspondant à une catégorie!!!")
+                        print("!!! Veuillez entrer un chiffre correspondant à une catégorie!!!\n")
             elif sel_welcome == 2:
                 ORMR.read_research()
                 print()
                 start = 0
             else:
-                print("veuillez resaisir un choix compris entre 1 et 2")
+                print("Veuillez resaisir un choix compris entre 1 et 2!\n")
 
 
 if __name__ == "__main__":

@@ -23,7 +23,7 @@ class Subcategory(BaseModel):
     name = CharField(null=True, unique=True)
 
     class Meta:
-        table_name = 'category'
+        table_name = 'subcategory'
 
 
 class Product(BaseModel):
