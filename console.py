@@ -1,12 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-from peewee import *
-import orm_request
-from orm_data import Subcategory, Product, Research, Product, Store, ProductStore, database as database
-from tools import ask_integer
-
-# SQL_connection.connect()
-ORMR = orm_request
+import orm_request as ORMR
 
 
 def user_input():
