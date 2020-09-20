@@ -113,7 +113,7 @@ Version 0.1
 
 ## Authors
 
-* **Ben Bessayah** - *Initial work* - [bbbenbat](https://github.com/bbbenbat)
+* **Ben Bessayah** - *Student* - [bbbenbat](https://github.com/bbbenbat)
 
 
 
