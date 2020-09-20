@@ -10,6 +10,8 @@ ORMR = orm_request
 
 
 def user_input():
+    """ Start menu, user can choice by find a substitute product or see the historic of research.
+    Used in main()."""
     global sel_welcome
     sel_welcome = int(input("==============================\n"
                             "= Que souhaitez-vous faire ? =\n"

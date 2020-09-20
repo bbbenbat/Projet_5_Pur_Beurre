@@ -29,7 +29,13 @@ def create_subcat():
         except:
             pass
 
+
 def check_delete():
+    """ As to user if he want to :
+    - delete and create tables from Pur Beurre database
+    - update the subcategories (reference product) since subcategories.json
+    Used in start_init."""
+    # ask delete and create tables from Pur Beurre database
     delete_db = int(input(
         """Voulez-vous effacer l'ensemble des données de la base Pur Beurre (les données seront DEFINITIVEMENT perdues)?
         => OUI = taper 1
@@ -39,8 +45,9 @@ def check_delete():
         create_subcat()
         print("Effacement de la base de donnée et mise à jour des produits de réference.")
         print("La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
-        time.sleep(5.0)
+        time.sleep(2.0)
     elif delete_db == 2:
+        # ask if update the subcategories (reference product) since subcategories.json
         update_subcat = int(input(
             """Voulez vous mettre à jour les produits de référence (apres avoir mis à jour le fichier subcategories.json)?
             => OUI = taper 1
@@ -49,7 +56,7 @@ def check_delete():
             create_subcat()
             print("Mise à jour des produits de réference.")
             print("La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
-            time.sleep(5.0)
+            time.sleep(2.0)
         elif update_subcat == 2:
             pass
         else:
@@ -65,18 +72,19 @@ def check_delete():
             "La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
         time.sleep(8.0)
     while True:
+        # ask page number
         page = int(input("Quel numéro de page souhaitez-vous (entre 1 et 9)?\n"))
-        if 1 <= page <= 10:
+        if 1 <= page <= 9:
             break
         else:
             print("Mauvaise chiffre, veuillez resaisir:\n ")
     while True:
-        num_prod = int(input("Combien de produits de substitution souhaitez-vous (entre 1 et 50)?\n"))
-        if 1 <= num_prod <= 50:
+        # ask number of product
+        num_prod = int(input("Combien de produits de substitution souhaitez-vous (entre 1 et 100)?\n"))
+        if 1 <= num_prod <= 100:
             break
         else:
             print("Mauvaise chiffre, veuillez resaisir:\n ")
-    print(page,num_prod)
     return page, num_prod
 
 
@@ -100,16 +108,15 @@ def save_data(list):
             pass
         else:
             # save product
-            #
             exe_pr = Product.insert(name=line[0], nutriscore=line[1], url=line[2],
                                     barcode=line[3], ingredient=line[4],
                                     id_category=line[5], categories_hierarchy=line[7])
-            # save the Product id table in id_pr variable
+            # save the Product table id in id_pr variable
             id_pr = exe_pr.execute()
             ### Store section
-            #check_st = tools.splite_tuple_to_liste(line[6])
+            # check_st = tools.splite_tuple_to_liste(line[6])
             check_st = line[6]
-            #print(">",check_st)
+            # print(">",check_st)
             # if there is a store with the product
             if check_st is not None:
                 # for each store
@@ -134,8 +141,8 @@ def save_data(list):
 
 def select_category():
     """ Give the categories regarding the subcategories of the database.
-     The categories are the first word of the subcategories.
-     Used in console."""
+    The categories are the first word of the subcategories.
+    Used in console."""
     print("CATEGORIES:")
     s_cat = Subcategory.select()
     for cat in s_cat:
@@ -187,6 +194,8 @@ def list_prod(req):
 
 
 def find_store(req):
+    """ Show all stores of the product (req).
+    Used in list_prod()."""
     list_store = []
     query = (ProductStore
              .select()
@@ -202,8 +211,10 @@ def find_store(req):
 
 def save_user_select(req, req1, req2, req3):
     """ req is the dict of best products
-     req1 is the subcategory selected by user
-     choice is the best product selected by user """
+    req1 is the subcategory selected by user
+    req2 is the minimal number for choice user
+    req3 is the maximal number for choice user
+    Used in console."""
     x = 0
     while x == 0:
         choice = int(input("=============================================\n"
@@ -218,10 +229,13 @@ def save_user_select(req, req1, req2, req3):
 
 
 def read_research():
+    """ Show the research saved.
+    Used in console."""
     print("==================================================================")
+    # Use the many to many relation
     for row in Research \
-            .select(Research.id_product, Research.id_product_best, Product.name.alias('product'),
-                    Subcategory.name.alias('subcat'),
+            .select(Research.id_subcategory, Research.id_product_best, Product.name.alias('product'),
+                    Subcategory.name.alias('subcat'), Product.nutriscore, Product.ingredient,
                     Research.date) \
             .join(Product) \
             .switch(Research) \
@@ -229,5 +243,6 @@ def read_research():
             .order_by(Research.date) \
             .dicts():
         print(
-            row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'])
+            row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'], "| Score :",
+            row['nutriscore'], "| Ingrédients :", row['ingredient'])
         print("==================================================================")

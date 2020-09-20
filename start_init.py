@@ -1,16 +1,13 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-import requests
 import orm_request as ORMR
-import orm_data as ORMD
 import API_connection as APIC
-import tools
 
 
 def main():
+    # page[0] call create_table(), page[1] call create_subcat()
     page = ORMR.check_delete()
     for cate in APIC.list_subcategories():
-        #print("!!!!! CATE", cate)
         # to find the ID of the category in Subcategory table
         id_category = ORMR.id_category(cate)
         # we call the function api_subcategory for the API connection

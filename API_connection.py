@@ -37,7 +37,6 @@ def api_subcategory(categ, req1, req2):
                   'fields': FIELDS}
     res = requests.get(API_URL, parameters)
     data_api = res.json()
-    #print("DATA_API", data_api['products'])
     # Check that all fields are in data_api, if not it will be created with '' value
     data_api_checked = tools.check_list(data_api, FIELDS.split(','))
     return data_api_checked

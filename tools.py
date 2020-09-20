@@ -69,16 +69,16 @@ def check_list(list_one, list_two):
     Return the list_two with all keys."""
     list_one_p = list_one['products']
     new_list = []
-    #print("LIST_ONE_p : ", list_one_p)
-    #print("LIST_TWO", list_two)
+    # print("LIST_ONE_p : ", list_one_p)
+    # print("LIST_TWO", list_two)
     for row in list_one_p:
-        #print("ROW", row)
+        # print("ROW", row)
         for rows in list_two:
             if rows in row:
-                #print("Déjà présent!")
+                # print("Déjà présent!")
                 pass
             else:
-                #print("Rajouter \n", rows)
+                # print("Rajouter \n", rows)
                 row.update({rows: ''})
         posi = list_one_p.index(row)
         list_one_p[posi] = row
@@ -93,7 +93,5 @@ def read_json(req):
         data_dict = json.load(json_data)
     for value in data_dict.values():
         data_list.append(value)
-    #print(data_list)
+    # print(data_list)
     return data_list
-
-

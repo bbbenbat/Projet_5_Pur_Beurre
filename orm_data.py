@@ -66,7 +66,7 @@ class ProductStore(BaseModel):
 
 class Research(BaseModel):
     date = DateTimeField(null=True)
-    id_product = ForeignKeyField(column_name='id_product', field='id', model=Subcategory, null=True)
+    id_subcategory = ForeignKeyField(column_name='id_subcategory', field='id', model=Subcategory, null=True)
     id_product_best = ForeignKeyField(column_name='id_product_best', field='id', model=Product, null=True)
 
     class Meta:
