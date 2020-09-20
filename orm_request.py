@@ -221,7 +221,7 @@ def save_user_select(req, req1, req2, req3):
                            "= Quel produit souhaitez-vous sauvegarder ? =\n"
                            "=============================================\n"))
         if req2 <= choice <= req3:
-            Research.insert(id_product_best=req[choice], id_product=req1, date=datetime.now()).execute()
+            Research.insert(id_product=req[choice], id_subcategory=req1, date=datetime.now()).execute()
             print("Sélection sauvegardée!\n")
             x = 1
         else:
@@ -234,7 +234,7 @@ def read_research():
     print("==================================================================")
     # Use the many to many relation
     for row in Research \
-            .select(Research.id_subcategory, Research.id_product_best, Product.name.alias('product'),
+            .select(Research.id_subcategory, Research.id_product, Product.name.alias('product'),
                     Subcategory.name.alias('subcat'), Product.nutriscore, Product.ingredient,
                     Research.date) \
             .join(Product) \

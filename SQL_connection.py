@@ -31,9 +31,9 @@ class Connection:
 
     def IdCategory(self, cat):
         """ IdCategory gives the ID number of Cat.
-        Cat is the name in Category table"""
-        # curs.execute("SELECT id FROM Category WHERE name = '"+ cat +"'")
-        self.curs.execute("SELECT id FROM Category WHERE name = %s", (cat,))
+        Cat is the name in Subcategory table"""
+        # curs.execute("SELECT id FROM Subcategory WHERE name = '"+ cat +"'")
+        self.curs.execute("SELECT id FROM Subcategory WHERE name = %s", (cat,))
         # add the result to a list
         id_cat = self.curs.fetchone()
         # select the first value
@@ -132,9 +132,9 @@ class Connection:
     #
 
     def ListCat(self):
-        """List of categories. Gives the id and names of Category table. """
+        """List of categories. Gives the id and names of Subcategory table. """
         # execute Sql request to list the id and names
-        self.curs.execute("SELECT id, name FROM Category")
+        self.curs.execute("SELECT id, name FROM Subcategory")
         all_cat = self.curs.fetchall()
         all_cat = sorted(all_cat, key=lambda t: t[0])
         for row in all_cat:
