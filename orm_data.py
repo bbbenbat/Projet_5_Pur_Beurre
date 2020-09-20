@@ -17,8 +17,8 @@ class BaseModel(Model):
         database = database
 
 
-class Category(BaseModel):
-    """ Category table
+class Subcategory(BaseModel):
+    """ Subcategory table
     Columns : id, name"""
     name = CharField(null=True, unique=True)
 
@@ -31,7 +31,7 @@ class Product(BaseModel):
      Columns : id, barcode, categories_hierarchy, id_category, ingredient, name, nutriscore, url"""
     barcode = CharField(null=True)
     categories_hierarchy = CharField()
-    id_category = ForeignKeyField(column_name='id_category', field='id', model=Category, null=True)
+    id_category = ForeignKeyField(column_name='id_category', field='id', model=Subcategory, null=True)
     ingredient = CharField(null=True)
     name = CharField(null=True)
     nutriscore = CharField(null=True)
@@ -42,6 +42,8 @@ class Product(BaseModel):
 
 
 class Store(BaseModel):
+    """ Store table
+     Columns : id, name"""
     name = CharField(null=True, unique=True)
 
     class Meta:
@@ -49,6 +51,9 @@ class Store(BaseModel):
 
 
 class ProductStore(BaseModel):
+    """ ProductStore table
+    Many to many between Product and Store tables
+    Columns : id, product, store"""
     product = ForeignKeyField(column_name='product_id', field='id', model=Product)
     store = ForeignKeyField(column_name='store_id', field='id', model=Store)
 
@@ -61,7 +66,7 @@ class ProductStore(BaseModel):
 
 class Research(BaseModel):
     date = DateTimeField(null=True)
-    id_product = ForeignKeyField(column_name='id_product', field='id', model=Category, null=True)
+    id_product = ForeignKeyField(column_name='id_product', field='id', model=Subcategory, null=True)
     id_product_best = ForeignKeyField(column_name='id_product_best', field='id', model=Product, null=True)
 
     class Meta:

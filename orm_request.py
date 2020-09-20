@@ -1,50 +1,94 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from peewee import *
-from orm_data import Category, Research, Product, Store, ProductStore, database
+from orm_data import Subcategory, Research, Product, Store, ProductStore, database
 import API_connection
 from datetime import datetime
-import tools
+import time
 
 API_LIST = API_connection.list_subcategories()
 select_cat = []
 select_sub_cat = {}
-
-"""
-def list_cat():
-    for cat in Category.select().order_by(Category.id.asc()):
-        print(cat.id, cat.name)
-"""
-
-
-def id_category(cat):
-    """ Give the id of each category of Category table.
-    Used in start_init."""
-    id_cat = Category.get(Category.name == cat).id
-    print(id_cat)
-    return id_cat
-
-
-def create_cat():
-    """ Create categories selected on API connexion, in Category table.
-    Used in start_init."""
-    for req in API_LIST:
-        try:
-            Category.insert(name=req).execute()
-        except:
-            pass
 
 
 def create_table():
     """WARNING : Delete et Create all tables of PUR_BEURRE Database!!!
     Used in start_init."""
     # database.connect()
-    database.drop_tables([Category, Product, Research, Store, ProductStore])
-    database.create_tables([Category, Product, Research, Store, ProductStore])
+    database.drop_tables([Subcategory, Product, Research, Store, ProductStore])
+    database.create_tables([Subcategory, Product, Research, Store, ProductStore])
     # database.close()
 
 
-def check_data(list):
+def create_subcat():
+    """ Create categories selected on API connexion, in Subcategory table.
+    Used in start_init."""
+    for req in API_LIST:
+        try:
+            Subcategory.insert(name=req).execute()
+        except:
+            pass
+
+def check_delete():
+    delete_db = int(input(
+        """Voulez-vous effacer l'ensemble des données de la base Pur Beurre (les données seront DEFINITIVEMENT perdues)?
+        => OUI = taper 1
+        => NON = taper 2\n"""))
+    if delete_db == 1:
+        create_table()
+        create_subcat()
+        print("Effacement de la base de donnée et mise à jour des produits de réference.")
+        print("La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
+        time.sleep(5.0)
+    elif delete_db == 2:
+        update_subcat = int(input(
+            """Voulez vous mettre à jour les produits de référence (apres avoir mis à jour le fichier subcategories.json)?
+            => OUI = taper 1
+            => NON = taper 2\n"""))
+        if update_subcat == 1:
+            create_subcat()
+            print("Mise à jour des produits de réference.")
+            print("La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
+            time.sleep(5.0)
+        elif update_subcat == 2:
+            pass
+        else:
+            print(
+                "Erreur de saisie!!!\n"
+                "Veuillez relancer l'application si vous souhaitez effacer la base de donnée ou modifier les produits de référence.\n"
+                "La mise à jour des produits de substitution va se faire dans 5 secondes.\n")
+            time.sleep(8.0)
+    else:
+        print(
+            "Erreur de saisie!!!\n"
+            "Veuillez relancer l'application si vous souhaitez effacer la base de donnée ou modifier les produits de référence.\n"
+            "La mise à jour des produits de substitution va se faire dans quelques secondes.\n")
+        time.sleep(8.0)
+    while True:
+        page = int(input("Quel numéro de page souhaitez-vous (entre 1 et 9)?\n"))
+        if 1 <= page <= 10:
+            break
+        else:
+            print("Mauvaise chiffre, veuillez resaisir:\n ")
+    while True:
+        num_prod = int(input("Combien de produits de substitution souhaitez-vous (entre 1 et 50)?\n"))
+        if 1 <= num_prod <= 50:
+            break
+        else:
+            print("Mauvaise chiffre, veuillez resaisir:\n ")
+    print(page,num_prod)
+    return page, num_prod
+
+
+def id_category(cat):
+    """ Give the id of each category of Subcategory table.
+    Used in start_init."""
+    id_cat = Subcategory.get(Subcategory.name == cat).id
+    print(id_cat)
+    return id_cat
+
+
+def save_data(list):
     """ Check and save API's data to the database.
     Used in start_init."""
     for line in list:
@@ -52,20 +96,20 @@ def check_data(list):
         # if product is not in the table (check with name and barcode)
         query_pr = Product.select().where(Product.name == line[0], Product.barcode == line[3])
         if query_pr.exists():
-            print("Existe déjà!")
+            print("Existe déjà!, PRODUIT :", line[0], "BARCODE" == line[3])
             pass
         else:
             # save product
+            #
             exe_pr = Product.insert(name=line[0], nutriscore=line[1], url=line[2],
                                     barcode=line[3], ingredient=line[4],
                                     id_category=line[5], categories_hierarchy=line[7])
-            # save the Product id on the new product
+            # save the Product id table in id_pr variable
             id_pr = exe_pr.execute()
             ### Store section
-            print(line[6])
-            # check_st = tools.splite_tuple_to_liste(line[6])
+            #check_st = tools.splite_tuple_to_liste(line[6])
             check_st = line[6]
-            # print(">",check_st)
+            #print(">",check_st)
             # if there is a store with the product
             if check_st is not None:
                 # for each store
@@ -93,7 +137,7 @@ def select_category():
      The categories are the first word of the subcategories.
      Used in console."""
     print("CATEGORIES:")
-    s_cat = Category.select()
+    s_cat = Subcategory.select()
     for cat in s_cat:
         cate = cat.name.split()[:1]
         if cate[0] in select_cat:
@@ -111,7 +155,7 @@ def select_sub_category(req):
     select_sub_cat = {}
     min_sub_cat = []
     print("POUR LA CATEGORIE", req, ":")
-    ssub_cat = Category.select().where(Category.name.iregexp(req))
+    ssub_cat = Subcategory.select().where(Subcategory.name.iregexp(req))
     # print("REQUETE SQL NOM CATEGORIE",ssub_cat)
     for sub in ssub_cat:
         select_sub_cat.update({sub.id: sub.name})
@@ -126,16 +170,20 @@ def list_prod(req):
     Used in console."""
     z = 1
     y = z
+    x = 1
     dico_product = {}
     produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
     for prod in produ:
-        List_store = find_store(prod.id)
-        print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store, "| Lien :",
-              prod.url, "| \n ==> description :",
-              prod.ingredient, "\n======================================================")
-        dico_product.update({z: prod.id})
+        if z <= 5:
+            List_store = find_store(prod.id)
+            print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store,
+                  "| Lien :",
+                  prod.url, "| \n ==> description :",
+                  prod.ingredient, "\n======================================================")
+            dico_product.update({z: prod.id})
+            x += 1
         z += 1
-    return dico_product, y, z - 1
+    return dico_product, y, x - 1
 
 
 def find_store(req):
@@ -173,23 +221,13 @@ def read_research():
     print("==================================================================")
     for row in Research \
             .select(Research.id_product, Research.id_product_best, Product.name.alias('product'),
-                    Category.name.alias('subcat'),
+                    Subcategory.name.alias('subcat'),
                     Research.date) \
             .join(Product) \
             .switch(Research) \
-            .join(Category) \
+            .join(Subcategory) \
             .order_by(Research.date) \
             .dicts():
         print(
             row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'])
         print("==================================================================")
-
-        # read_research()
-    # Ask to user which product must be saved
-    # Save the research to Research table
-
-    # find_store(1)
-    # list_prod(9)
-    # select_sub_category()
-    # create_table()
-    # create_cat()

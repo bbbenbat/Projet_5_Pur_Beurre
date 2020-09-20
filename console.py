@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from peewee import *
 import orm_request
-from orm_data import Category, Product, Research, Product, Store, ProductStore, database as database
+from orm_data import Subcategory, Product, Research, Product, Store, ProductStore, database as database
 from tools import ask_integer
 
 # SQL_connection.connect()
@@ -69,9 +69,11 @@ def main():
                                     search_page = 1
                                 else:
                                     print("!!! Veuillez entrer un chiffre compris entre 1 et 3 !!!")
-                            # else:
-                            #    print("!!! Veuillez entrer un nombre compris entre", sub_categ[1], "et", sub_categ[2],
-                            #          "!!!")
+                            else:
+                                if check_input == 1:
+                                    pass
+                                else:
+                                    print("!!! Veuillez entrer un chiffre correspondant à un produit!!!")
                     else:
                         print("!!! Veuillez entrer un chiffre correspondant à une catégorie!!!")
             elif sel_welcome == 2:
