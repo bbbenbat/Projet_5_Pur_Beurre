@@ -74,6 +74,7 @@ You can add new products by launching the script and then entering another page.
 
 You can add benchmark products (the subcategories) by editing the subcategories.json file and then relaunching the script.
 Then select 2 for the first question, then type 1 for the second question to update the reference products (in subcategorie table).
+
 <b>Warning: The first word of each sub-category is used to group them into categories. Please follow this methodology.</b>
 ```
     "category_1" : "pizza au saumon",
