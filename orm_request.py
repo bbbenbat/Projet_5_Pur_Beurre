@@ -235,7 +235,7 @@ def read_research():
     # Use the many to many relation
     for row in Research \
             .select(Research.id_subcategory, Research.id_product, Product.name.alias('product'),
-                    Subcategory.name.alias('subcat'), Product.nutriscore, Product.ingredient,
+                    Subcategory.name.alias('subcat'), Product.nutriscore, Product.ingredient, Product.url,
                     Research.date) \
             .join(Product) \
             .switch(Research) \
@@ -244,5 +244,5 @@ def read_research():
             .dicts():
         print(
             row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'], "| Score :",
-            row['nutriscore'], "| Ingrédients :", row['ingredient'])
+            row['nutriscore'],"| Lien :",row['url'], "| Ingrédients :", row['ingredient'])
         print("==================================================================")
