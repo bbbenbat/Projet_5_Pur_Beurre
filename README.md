@@ -74,8 +74,21 @@ You can add new products by launching the script and then entering another page.
 
 You can add benchmark products (the subcategories) by editing the subcategories.json file and then relaunching the script.
 Then select 2 for the first question, then type 1 for the second question to update the reference products (in subcategorie table).
->Warning: The first word of each sub-category is used to group them into categories. Please follow this methodology.
-
+<b>Warning: The first word of each sub-category is used to group them into categories. Please follow this methodology.</b>
+```
+    "category_1" : "pizza au saumon",
+    "category_2" : "pizza au fromage",
+    "category_3" : "pizza au jambon",
+    "category_4" : "yaourt a la fraise",
+    "category_5" : "yaourt a l abricot",
+    "category_6" : "yaourt a l ananas",
+    "category_7" : "confiture a la fraise",
+    "category_8" : "confiture a la framboise",
+    "category_9" : "confiture d abricot",
+    "category_10" : "jus de pomme",
+    "category_11" : "jus d orange",
+    "category_12" : "jus de raisin"
+```
 ## How to use
 
 Launch the 'console.py' file to start the program.
