@@ -9,9 +9,13 @@ These instructions will get you to use the application on your local machine
 ### Prerequisites
 
 Your local machine must have a mysql server installed with a database :
+
 name : pur_beurre
+
 user : ocr
+
 password : As you want(asked at start application)
+
 rules user : all privileges on this database
 
 ```
@@ -37,12 +41,19 @@ PyMySQL 0.10.0
 
 Save the Pur_Beurre folder on your local machine (containing the mysql server).
 Check that the folder contains 7 files:
+
 - orm_data.py
+
 - orm_request.py
+
 - API_connection.py
+
 - console.py
+
 - start_init.py
+
 - tools.py
+
 - subcategories.json
 
 Launch the 'start_init.py' file to install the tables and create the sub-categories in the Pur_Beurre database.
