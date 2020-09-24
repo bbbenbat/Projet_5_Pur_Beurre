@@ -24,18 +24,7 @@ CHARACTER SET 'utf8mb4';
 CREATE USER 'ocr'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON pur_beurre. * TO 'ocr'@'localhost';
 ```
-Install Python version 3.7, with the following modules:
-
-mysql-client 0.0.1 ,
-mysql-connector 2.2.9 ,
-mysql-connector-async-dd 2.0.2 ,
-mysql-connector-python 8.0.21 ,
-mysql-connector-python-dd 2.0.2 ,
-mysqldbda 1.0.2 ,
-peewee 3.13.3 ,
-peewee-async 0.7.0 ,
-requests 2.24.0 ,
-PyMySQL 0.10.0 
+Install Python version 3.7, with the requirements.txt.
 
 ### Installing
 
