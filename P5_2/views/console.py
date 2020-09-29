@@ -1,0 +1,92 @@
+# !/usr/bin/env python
+# -*- coding: utf-8 -*-
+from controllers import orm
+
+orm_imp = orm.Orm()
+
+
+def user_input():
+    """ Start menu, user can choice by find a substitute product or see the historic of research.
+    Used in main()."""
+    global sel_welcome
+    sel_welcome = int(input("==============================\n"
+                            "= Que souhaitez-vous faire ? =\n"
+                            "==============================\n"
+                            "Avoir un produit de remplacement plus sain : tapez 1\n"
+                            "Voir mon historique de recherche : tape 2\n"
+                            ))
+    return sel_welcome
+
+
+def main():
+    print("Bienvenue sur l'application PurBeurre!!!")
+    main_page = 0
+    # While application is started
+    while main_page == 0:
+        start_page = 0
+        while start_page == 0:
+            user_input()
+            # sel_welcome = 0
+            search_page = 0
+            # If user selects a choice.
+            if sel_welcome == 1:
+                while search_page == 0:
+                    start_page = 0
+                    # Print category.
+                    select_cate = orm_imp.select_category()
+                    # Number of categories.
+                    last_select_cat = len(select_cate) - 1
+                    user_cat = int(input("=> Entrer le numéro de catégorie que vous recherchez :\n"))
+                    if user_cat >= 0 and user_cat <= last_select_cat:
+                        while start_page == 0:
+                            # Give the subcategories regarding the category selected.
+                            sub_categ = orm_imp.select_sub_category(select_cate[user_cat])
+                            user_prod = int(input("=> Entrer le numéro du produit que vous recherchez :\n"))
+                            check_input = 0
+                            while user_prod in sub_categ and check_input == 0:
+                                # Give the bests product, selected by nutriscore value.
+                                prod = orm_imp.list_prod(user_prod)
+                                user_choice = int(input(
+                                    """
+                                    ==============================
+                                    = Que souhaitez-vous faire ? =
+                                    ==============================
+                                    - Sauvegarder un produit proposé : taper 1 
+                                    - Faire une autre recherche produit : taper 2 
+                                    - Retourner à l'écran principal : taper 3\n"""))
+                                if user_choice == 1:
+                                    # Ask to user which product must be saved
+                                    # Save the research to Research table
+                                    orm_imp.save_user_select(prod[0], user_prod, prod[1], prod[2])
+                                    check_input = 1
+                                    start_page = 1
+                                    search_page = 1
+                                elif user_choice == 2:
+                                    # goback to product research section
+                                    # print("Entrer le numéro de catégorie que vous recherchez :\n")
+                                    check_input = 1
+                                    start_page = 1
+                                elif user_choice == 3:
+                                    # go to Main section
+                                    check_input = 1
+                                    start_page = 1
+                                    search_page = 1
+                                else:
+                                    print("!!! Veuillez entrer un chiffre compris entre 1 et 3 !!!\n")
+                            else:
+                                if check_input == 1:
+                                    pass
+                                else:
+                                    print("!!! Veuillez entrer un chiffre correspondant à un produit : \n")
+                    else:
+                        print("!!! Veuillez entrer un chiffre correspondant à une catégorie!!!\n")
+            elif sel_welcome == 2:
+                orm_imp.read_research()
+                print()
+                start = 0
+            else:
+                print("Veuillez resaisir un choix compris entre 1 et 2!\n")
+
+
+if __name__ == "__main__":
+    main()
