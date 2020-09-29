@@ -27,11 +27,15 @@ Install Python version 3.7, with the modules in the requirements.txt file.
 Save the Pur_Beurre folder on your local machine (containing the mysql server).
 Check that the folder contains 5 folders:
 - admin : 
+    __init__.py,
     append.py,
-    create.py
+    create.py,
+    settings.json
 - controllers : 
+    __init__.py,
     orm.py
 - misc :
+    __init__.py,
     tools.py
 - models :
     __init__.py,
@@ -42,27 +46,49 @@ Check that the folder contains 5 folders:
     store.py,
     subcategory.py
 - views :
+    __init__.py,
     console.py
 - readme.md
 - requirement.txt
-- settings.json
 
-Launch the 'create.py' file from admin folder to install the tables and create the sub-categories in the Pur_Beurre database.
+Launch the 'create.py' file from admin folder to create the tables into the Pur_Beurre database.
 
 ```
 > python create.py
 ```
 Enter the password for the user 'ocr'.
 ```
-> python start_init.py
+> python create.py
 Veuillez saisir le mot de passe de connexion:
 ```
 
-At the first question, type 1 to create the tables.
-For the second question, type 1 to save the sub-categories.
+Launch the 'append.py' file to update the subcategories and the products into the Database. 
+You can add benchmark products (the subcategories) by editing the 'settings.json' file and then relaunching the script.
 
-Next, enter the page number you want to download from the OpenFoodFacts API.
-Then enter the number of products you want for each sub-category.
+```
+"categories": [
+    "pizza au thon",
+    "pizza au fromage",
+    "pizza au jambon",
+    "yaourt a la fraise",
+    "yaourt a l abricot",
+    "yaourt a l ananas",
+    "confiture a la fraise",
+    "confiture a la framboise",
+    "confiture d abricot",
+    "jus de fraise",
+    "jus d orange",
+    "jus de raisin"
+  ]
+```
+
+You can change the page number and the number of products you want to download from the OpenFoodFacts API,
+ on the same one.
+
+```
+  "page": 1,
+  "product_per_page": 100
+```
 
 Let the program download the data and save it to the local database.
 You can see the number of products registered on the last execution line.
@@ -72,10 +98,8 @@ product 554 store : SELECT `t1`.`id`, `t1`.`name` FROM `store` AS `t1` WHERE (`t
 product 555 store : SELECT `t1`.`id`, `t1`.`name` FROM `store` AS `t1` WHERE (`t1`.`name` = 'monoprix')
 >
 ```
-You can add new products by launching the script and then entering another page.
-
-You can add benchmark products (the subcategories) by editing the subcategories.json file and then relaunching the script.
-Then select 2 for the first question, then type 1 for the second question to update the reference products (in subcategorie table).
+You can add new products by launching the same script 'append.py' (change before the number of page on 
+'settings.json' file).
 
 ## How to use
 
