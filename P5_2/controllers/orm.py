@@ -15,8 +15,7 @@ select_sub_cat = {}
 
 
 class Orm:
-    """  """
-
+    """ All SQL requests via Peewee ORM """
     def subcat(self, subcat_file):
         """ Update categories from settings.json file, in Subcategory table.
         Used in append."""
@@ -46,7 +45,7 @@ class Orm:
 
     def save_data(self, list):
         """ Check and save API's data to the database.
-        Used in start_init."""
+        Used in append."""
         for line in list:
             ### Product section
             # if product is not in the table (check with name and barcode)

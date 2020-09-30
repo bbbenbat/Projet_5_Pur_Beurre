@@ -5,6 +5,8 @@ from models import orm_data as od, subcategory as sc, product as pr, product_sto
 
 
 class CreateDbb:
+    """ Start this class for the first installation or re-installation.
+    Delete tables (if exist) and create it."""
     def delete_dbb(self):
         od.database.drop_tables([sc.Subcategory, pr.Product, rs.Research, st.Store, ps.ProductStore])
 
