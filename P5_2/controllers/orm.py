@@ -16,6 +16,7 @@ select_sub_cat = {}
 
 class Orm:
     """ All SQL requests via Peewee ORM """
+
     def subcat(self, subcat_file):
         """ Update categories from settings.json file, in Subcategory table.
         Used in append."""
@@ -24,7 +25,7 @@ class Orm:
         for req in subcat_file:
             try:
                 # the next id from Subcategory table
-                result = (sc.select(fn.MAX(sc.id)).scalar())+1
+                result = (sc.select(fn.MAX(sc.id)).scalar()) + 1
                 try:
                     # sc.insert(id=last_id, name=req).execute()
                     sc.insert(id=result, name=req).execute()
@@ -63,7 +64,6 @@ class Orm:
                 ### Store section
                 # check_st = tools.splite_tuple_to_liste(line[6])
                 check_st = line[6]
-                # print(">",check_st)
                 # if there is a store with the product
                 if check_st is not None:
                     # for each store
@@ -87,9 +87,7 @@ class Orm:
 
     def select_category(self):
         """ Give the categories regarding the subcategories of the database.
-        The categories are the first word of the subcategories.
-        Used in console."""
-        print("CATEGORIES:")
+        The categories are the first word of the subcategories. """
         s_cat = sc.select()
         for cat in s_cat:
             cate = cat.name.split()[:1]
@@ -97,44 +95,19 @@ class Orm:
                 pass
             else:
                 select_cat.append(cate[0])
-        for cat in enumerate(select_cat):
-            print(cat[0], cat[1])
         return select_cat
 
     def select_sub_category(self, req):
         """ Give the subcategories regarding the category selected(req).
         Used in console."""
-        select_sub_cat = {}
-        min_sub_cat = []
-        print("POUR LA CATEGORIE", req, ":")
         ssub_cat = sc.select().where(sc.name.iregexp(req))
-        # print("REQUETE SQL NOM CATEGORIE",ssub_cat)
-        for sub in ssub_cat:
-            select_sub_cat.update({sub.id: sub.name})
-        for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
-            print(sub_cat[0], sub_cat[1])
-            min_sub_cat.append(sub_cat[0])
-        return select_sub_cat
+        # return select_sub_cat
+        return ssub_cat
 
     def list_prod(self, req):
-        """ Give the bests product, selected by nutriscore value.
-        Used in console."""
-        z = 1
-        y = z
-        x = 1
-        dico_product = {}
+        """ Request for the bests product, selected by nutriscore value. """
         produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
-        for prod in produ:
-            if z <= 5:
-                List_store = self.find_store(prod.id)
-                print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store,
-                      "| Lien :",
-                      prod.url, "| \n ==> description :",
-                      prod.ingredient, "\n======================================================")
-                dico_product.update({z: prod.id})
-                x += 1
-            z += 1
-        return dico_product, y, x - 1
+        return produ
 
     def find_store(self, req):
         """ Show all stores of the product (req).
@@ -151,28 +124,16 @@ class Orm:
         # Return list of values without []
         return str(list_store).strip('[]')
 
-    def save_user_select(self, req, req1, req2, req3):
+    def save_user_select(self, req, req1, req2):
         """ req is the dict of best products
         req1 is the subcategory selected by user
-        req2 is the minimal number for choice user
-        req3 is the maximal number for choice user
-        Used in console."""
-        x = 0
-        while x == 0:
-            choice = int(input("=============================================\n"
-                               "= Quel produit souhaitez-vous sauvegarder ? =\n"
-                               "=============================================\n"))
-            if req2 <= choice <= req3:
-                Research.insert(id_product=req[choice], id_subcategory=req1, date=datetime.now()).execute()
-                print("Sélection sauvegardée!\n")
-                x = 1
-            else:
-                print("Veuillez entrer un chiffre compris entre ", req2, " et ", req3)
+        req2 is the product selected by user. """
+        Research.insert(id_product=req[req2], id_subcategory=req1, date=datetime.now()).execute()
 
     def read_research(self):
         """ Show the research saved.
         Used in console."""
-        print("==================================================================")
+        list_research = []
         # Use the many to many relation
         for row in Research \
                 .select(Research.id_subcategory, Research.id_product, Product.name.alias('product'),
@@ -183,10 +144,5 @@ class Orm:
                 .join(sc) \
                 .order_by(Research.date) \
                 .dicts():
-            print(
-                row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'], "| Score :",
-                row['nutriscore'], "| Lien :", row['url'], "| Ingrédients :", row['ingredient'])
-            print("==================================================================")
-
-
-
+            list_research.append(row)
+        return list_research
