@@ -1,92 +1,165 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 from controllers import orm
+from misc import tools
 
 orm_imp = orm.Orm()
 
 
-def user_input():
-    """ Start menu, user can choice by find a substitute product or see the historic of research.
-    Used in main()."""
-    global sel_welcome
-    sel_welcome = int(input("==============================\n"
-                            "= Que souhaitez-vous faire ? =\n"
-                            "==============================\n"
-                            "Avoir un produit de remplacement plus sain : tapez 1\n"
-                            "Voir mon historique de recherche : tape 2\n"
-                            ))
-    return sel_welcome
+class Console:
+    """ """
 
+    def __init__(self):
+        """  """
 
-def main():
-    print("Bienvenue sur l'application PurBeurre!!!")
-    main_page = 0
-    # While application is started
-    while main_page == 0:
-        start_page = 0
-        while start_page == 0:
-            user_input()
-            # sel_welcome = 0
-            search_page = 0
-            # If user selects a choice.
+    def console(self):
+        """ Start menu, user can choice by find a substitute product or see the historic of research. """
+        controle_point = 1
+        while controle_point == 1:  # While application is started
+            sel_welcome = self.welcome_input()
+            controle_point = 2
             if sel_welcome == 1:
-                while search_page == 0:
-                    start_page = 0
-                    # Print category.
-                    select_cate = orm_imp.select_category()
-                    # Number of categories.
-                    last_select_cat = len(select_cate) - 1
-                    user_cat = int(input("=> Entrer le numéro de catégorie que vous recherchez :\n"))
-                    if user_cat >= 0 and user_cat <= last_select_cat:
-                        while start_page == 0:
-                            # Give the subcategories regarding the category selected.
-                            sub_categ = orm_imp.select_sub_category(select_cate[user_cat])
-                            user_prod = int(input("=> Entrer le numéro du produit que vous recherchez :\n"))
-                            check_input = 0
-                            while user_prod in sub_categ and check_input == 0:
-                                # Give the bests product, selected by nutriscore value.
-                                prod = orm_imp.list_prod(user_prod)
-                                user_choice = int(input(
-                                    """
-                                    ==============================
-                                    = Que souhaitez-vous faire ? =
-                                    ==============================
-                                    - Sauvegarder un produit proposé : taper 1 
-                                    - Faire une autre recherche produit : taper 2 
-                                    - Retourner à l'écran principal : taper 3\n"""))
-                                if user_choice == 1:
-                                    # Ask to user which product must be saved
-                                    # Save the research to Research table
-                                    orm_imp.save_user_select(prod[0], user_prod, prod[1], prod[2])
-                                    check_input = 1
-                                    start_page = 1
-                                    search_page = 1
-                                elif user_choice == 2:
-                                    # goback to product research section
-                                    # print("Entrer le numéro de catégorie que vous recherchez :\n")
-                                    check_input = 1
-                                    start_page = 1
-                                elif user_choice == 3:
-                                    # go to Main section
-                                    check_input = 1
-                                    start_page = 1
-                                    search_page = 1
-                                else:
-                                    print("!!! Veuillez entrer un chiffre compris entre 1 et 3 !!!\n")
-                            else:
-                                if check_input == 1:
-                                    pass
-                                else:
-                                    print("!!! Veuillez entrer un chiffre correspondant à un produit : \n")
-                    else:
-                        print("!!! Veuillez entrer un chiffre correspondant à une catégorie!!!\n")
+                while controle_point == 2:
+                    controle_point = 3
+                    select_cate = self.categories()  # Print category.
+                    last_select_cat = len(select_cate) - 1  # Number of categories.
+                    user_cat = self.check_value('catégorie', 0, last_select_cat)
+                    while controle_point == 3:
+                        sub_categ = self.subcategories(orm_imp.select_sub_category(select_cate[user_cat]),
+                                                       select_cate[user_cat])  # Subcategories from category.
+                        user_prod = self.check_list_value('Produit', sub_categ)
+                        controle_point = 4
+                        while controle_point == 4:
+                            controle_point = self.proposal_product(user_prod)
             elif sel_welcome == 2:
-                orm_imp.read_research()
-                print()
-                start = 0
+                self.show_research()
+                controle_point = 1
             else:
-                print("Veuillez resaisir un choix compris entre 1 et 2!\n")
+                print("Veuillez resaisir un choix compris entre 1 et 2.")
+                controle_point = 1
 
+    def welcome_input(self):
+        """ Main section """
+        sel_welcome = int(input("==============================\n"
+                                "==========PUR BEURRE==========\n"
+                                "= Que souhaitez-vous faire ? =\n"
+                                "==============================\n"
+                                "Avoir un produit de remplacement plus sain : tapez 1\n"
+                                "Voir mon historique de recherche : tape 2\n"
+                                ))
+        return sel_welcome
 
-if __name__ == "__main__":
-    main()
+    def categories(self):
+        """  """
+        self.select_cat = orm_imp.select_category()
+        print("CATEGORIES:")
+        for cat in enumerate(self.select_cat):
+            print(cat[0], cat[1])
+        return self.select_cat
+
+    def subcategories(self, ssub_cat, user_cat):
+        """  """
+        select_sub_cat = {}
+        min_sub_cat = []
+        print("POUR LA CATEGORIE", user_cat, ":")
+        for sub in ssub_cat:
+            select_sub_cat.update({sub.id: sub.name})
+        for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
+            print(sub_cat[0], sub_cat[1])
+            min_sub_cat.append(sub_cat[0])
+        return min_sub_cat
+
+    def proposal_product(self, user_prod):
+        """ Show the best products and permit to save, make another research or go back to main section. """
+        prod0 = orm_imp.list_prod(user_prod)  # Give the bests product, selected by nutriscore value.
+        prod = self.show_proposal(prod0)
+        user_choice = int(input(
+            "==============================\n"
+            "= Que souhaitez-vous faire ? =\n"
+            "==============================\n"
+            "- Sauvegarder un produit proposé : taper 1\n"
+            "- Faire une autre recherche produit : taper 2\n"
+            "- Retourner à l'écran principal : taper 3\n"))
+        if user_choice == 1:  # save product, go to main section
+            self.save_product(prod[0], prod[1], prod[2], user_prod)
+            self.controle_point = 1
+        elif user_choice == 2:  # goback to product research section
+            self.controle_point = 2
+        elif user_choice == 3:  # go to main section
+            self.controle_point = 1
+        else:
+            print("Veuillez entrer un chiffre compris entre 1 et 3.")
+            self.controle_point = 4
+        return self.controle_point
+
+    def show_proposal(self, req):
+        """ Give the bests product, selected by nutriscore value."""
+        z = 1
+        y = z
+        x = 1
+        self.dico_product = {}
+        for prod in req:
+            if z <= 5:
+                List_store = orm_imp.find_store(prod.id)
+                print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store,
+                      "| Lien :",
+                      prod.url, "| \n ==> description :",
+                      prod.ingredient, "\n======================================================")
+                self.dico_product.update({z: prod.id})
+                x += 1
+            z += 1
+        return self.dico_product, y, x - 1
+
+    def show_research(self):
+        """  """
+        self.list_research = orm_imp.read_research()
+        print("==================================================================")
+        for row in self.list_research:
+            print(
+                row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'], "| Score :",
+                row['nutriscore'], "| Lien :", row['url'], "| Ingrédients :", row['ingredient'])
+            print("==================================================================")
+
+    def save_product(self, prod_0, prod_1, prod_2, user_prod):
+        """ req is the dict of best products
+                req1 is the subcategory selected by user
+                req2 is the minimal number for choice user
+                req3 is the maximal number for choice user. """
+        print("=============================================\n= Quel produit souhaitez-vous sauvegarder ? =\n"
+              "=============================================\n")
+        choice = tools.check_value('Produit préféré', prod_1, prod_2)
+        x = 0
+        while x < 3:
+            try:
+                orm_imp.save_user_select(prod_0, user_prod, choice)
+                print("Sélection sauvegardée!\n")
+                break
+            except:
+                print("Erreur lors de l'enregistrement, tentative n°", x)
+                x += 1
+                if x == 3:
+                    print("Impossible d'enregistré cette recherche, veuillez recommencer.")
+
+    def check_value(self, name, min_int, max_int):
+        """ Check if the value is between min_int and max_int """
+        while True:
+            numb = input(f"-- {name} : Entrez une valeur comprise entre {min_int} et {max_int} : ")
+            try:
+                check = int(numb)
+                if min_int <= check <= max_int:
+                    break
+            except ValueError:
+                pass
+        return check
+
+    def check_list_value(self, name, list_int):
+        """ Check if the value are in list_int """
+        while True:
+            numb = input(f"-- {name} : Entrez une de ces valeurs : {list_int} : ")
+            try:
+                check = int(numb)
+                if check in list_int:
+                    break
+            except ValueError:
+                pass
+        return check

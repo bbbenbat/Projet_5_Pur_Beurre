@@ -1,25 +1,35 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 import json
+import os.path
 
 from peewee import *
 
 
-def ask_integer(name, max_int, min_int=0):
+def check_value(name, min_int, max_int):
     """ Check if the values are correct """
-    assert type(name) == str
-    assert type(min_int) == int
-    assert type(max_int) == int
     while True:
-        numb = input(f"Entrez une valeur de {name.lower()} comprise entre {min_int} et {max_int} : ")
+        numb = input(f"-- {name} : Entrez une valeur comprise entre {min_int} et {max_int} : ")
         try:
             check = int(numb)
-            if check > max_int or check < min_int:
-                raise ValueError
-            break
+            if min_int <= check <= max_int:
+                break
         except ValueError:
             pass
-    return numb
+    return check
+
+
+def check_list_value(name, list_int):
+    """ Check if the values are correct """
+    while True:
+        numb = input(f"-- {name} : Entrez une de ces valeurs : {list_int} : ")
+        try:
+            check = int(numb)
+            if check in list_int:
+                break
+        except ValueError:
+            pass
+    return check
 
 
 def rp2cara(req, x, y, z):
@@ -96,3 +106,11 @@ def read_json(req):
         data_list.append(value)
     # print(data_list)
     return data_list
+
+
+def check_file(req, val1):
+    if os.path.isfile(req):
+        val1
+    else:
+        print("Fichier \",req,\" absent. \nVeuillez le placer dans le dossier.")
+        time.sleep(5.0)
