@@ -7,7 +7,9 @@ import requests
 
 from controllers import orm
 from misc import tools
+from views import append_feedback
 
+append_fb = append_feedback.Append_fb()
 
 class Api:
     """ All API data processing with registration in the database. """
@@ -83,7 +85,14 @@ class Api:
             # Call the function to create a list checked for the SQL integration
         all_product = self.clean_data(listAllProduct)
         # Call the function to save data to the database in the table (TProduct)
-        orm_imp.save_data(all_product)
+        list_product = orm_imp.save_data(all_product)[1]
+        old_product = orm_imp.save_data(all_product)[0]
+        list_error = orm_imp.save_data(all_product)[2]
+        append_fb.show_old_product(old_product)
+        append_fb.show_product(list_product)
+        append_fb.show_error(list_error)
+
+
 
 
 if __name__ == '__main__':

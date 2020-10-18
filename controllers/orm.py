@@ -10,9 +10,6 @@ from models.research import Research
 from models.store import Store
 from models.subcategory import Subcategory as sc
 
-select_cat = []
-select_sub_cat = {}
-
 
 class Orm:
     """ All SQL requests via Peewee ORM """
@@ -20,7 +17,6 @@ class Orm:
     def subcat(self, subcat_file):
         """ Update categories from settings.json file, in Subcategory table.
         Used in append."""
-        list_all = ''
         # Search the last id
         for req in subcat_file:
             try:
@@ -47,47 +43,40 @@ class Orm:
     def save_data(self, list):
         """ Check and save API's data to the database.
         Used in append."""
+        list_old_product = []
+        list_product = []
+        list_error = []
         for line in list:
-            ### Product section
             # if product is not in the table (check with name and barcode)
             query_pr = Product.select().where(Product.name == line[0], Product.barcode == line[3])
             if query_pr.exists():
-                print("Existe déjà!, PRODUIT :", line[0], "BARCODE" == line[3])
+                list_old_product.append([line[0], line[3]])
                 pass
-            else:
-                # save product
+            else:  # save product
                 exe_pr = Product.insert(name=line[0], nutriscore=line[1], url=line[2],
                                         barcode=line[3], ingredient=line[4],
                                         id_category=line[5], categories_hierarchy=line[7])
-                # save the Product table id in id_pr variable
-                id_pr = exe_pr.execute()
-                ### Store section
-                # check_st = tools.splite_tuple_to_liste(line[6])
+                id_pr = exe_pr.execute()  # save the Product table id in id_pr variable
                 check_st = line[6]
-                # if there is a store with the product
-                if check_st is not None:
-                    # for each store
-                    for sto in check_st:
-                        # check if store is in Store table
-                        id_st = Store.select().where(Store.name == sto)
+                if check_st is not None:  # if there is a store with the product
+                    for sto in check_st:  # for each store
+                        id_st = Store.select().where(Store.name == sto)  # check if store is in Store table
                         if id_st.exists():
-                            # id_st = 0
                             pass
                         else:
-                            # create store in Store table
-                            Store.insert(name=sto).execute()
+                            Store.insert(name=sto).execute()  # create store in Store table
                             id_st = Store.select().where(Store.name == sto)
-                        print("product", id_pr, "store :", id_st)
-                        ### Product_store section
-                        # save the relation between product and store in Product_store table
-                        try:
+                        list_product.append([id_pr, id_st])
+                        try:  # save the relation between product and store in Product_store table
                             ProductStore.insert(product_id=id_pr, store_id=id_st).execute()
                         except:
-                            print("Erreur sur :", id_pr, id_st)
+                            list_error.append([id_pr, id_st])
+        return list_old_product, list_product, list_error
 
     def select_category(self):
         """ Give the categories regarding the subcategories of the database.
         The categories are the first word of the subcategories. """
+        select_cat = []
         s_cat = sc.select()
         for cat in s_cat:
             cate = cat.name.split()[:1]
@@ -101,7 +90,6 @@ class Orm:
         """ Give the subcategories regarding the category selected(req).
         Used in console."""
         ssub_cat = sc.select().where(sc.name.iregexp(req))
-        # return select_sub_cat
         return ssub_cat
 
     def list_prod(self, req):
