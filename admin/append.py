@@ -1,18 +1,15 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import time
-
 import requests
 
 from controllers import orm
 from misc import tools
-from views import append_feedback
 
-append_fb = append_feedback.Append_fb()
 
 class Api:
     """ All API data processing with registration in the database. """
+
     def __init__(self):
         """ Return the subcategories from subcategories.json """
         self.list_subcategories = tools.read_json('settings.json')
@@ -26,8 +23,8 @@ class Api:
         TAG_CONTAINS_0 = "contains"
         TAG_0 = categ
         JSON = "true"
-        PAGE = int(api.list_subcategories[1])
-        PAGE_SIZE =  int(api.list_subcategories[2])
+        PAGE = int(self.list_subcategories[1])
+        PAGE_SIZE = int(self.list_subcategories[2])
         FIELDS = "product_name,nutrition_grades_tags,url,code,ingredients_text_fr,categories,stores_tags,categories_hierarchy"
         parameters = {'action': ACTION,
                       'tagtype_0': TAGTYPE_0,
@@ -84,19 +81,7 @@ class Api:
                 listAllProduct.append(row)
             # Call the function to create a list checked for the SQL integration
         all_product = self.clean_data(listAllProduct)
-        # Call the function to save data to the database in the table (TProduct)
-        list_product = orm_imp.save_data(all_product)[1]
+        # return the products already saved in database and errors from saving
         old_product = orm_imp.save_data(all_product)[0]
         list_error = orm_imp.save_data(all_product)[2]
-        append_fb.show_old_product(old_product)
-        append_fb.show_product(list_product)
-        append_fb.show_error(list_error)
-
-
-
-
-if __name__ == '__main__':
-    # Check if settings file is in admin folder before to start.
-    api = Api()
-    tools.check_file('settings.json',api.save_data())
-
+        return list_error, old_product

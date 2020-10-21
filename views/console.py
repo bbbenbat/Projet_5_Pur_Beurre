@@ -7,10 +7,7 @@ orm_imp = orm.Orm()
 
 
 class Console:
-    """ """
-
-    def __init__(self):
-        """  """
+    """ Visual interface for the application."""
 
     def console(self):
         """ Start menu, user can choice by find a substitute product or see the historic of research. """
@@ -50,7 +47,7 @@ class Console:
         return sel_welcome
 
     def categories(self):
-        """  """
+        """ Show the categories. """
         self.select_cat = orm_imp.select_category()
         print("CATEGORIES:")
         for cat in enumerate(self.select_cat):
@@ -58,7 +55,7 @@ class Console:
         return self.select_cat
 
     def subcategories(self, ssub_cat, user_cat):
-        """  """
+        """ Show the subcategories (reference products). """
         select_sub_cat = {}
         min_sub_cat = []
         print("POUR LA CATEGORIE", user_cat, ":")
@@ -111,7 +108,7 @@ class Console:
         return self.dico_product, y, x - 1
 
     def show_research(self):
-        """  """
+        """ Show all research saved. """
         self.list_research = orm_imp.read_research()
         print("==================================================================")
         for row in self.list_research:
@@ -121,10 +118,8 @@ class Console:
             print("==================================================================")
 
     def save_product(self, prod_0, prod_1, prod_2, user_prod):
-        """ req is the dict of best products
-                req1 is the subcategory selected by user
-                req2 is the minimal number for choice user
-                req3 is the maximal number for choice user. """
+        """ Save the product selected by user. prod_1: min number for the selection,
+        prod_2: max number, prod_0:dictionary with the best products, user_prod= subcategory id."""
         print("=============================================\n= Quel produit souhaitez-vous sauvegarder ? =\n"
               "=============================================\n")
         choice = tools.check_value('Produit préféré', prod_1, prod_2)

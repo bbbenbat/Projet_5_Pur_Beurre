@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import json
 import os.path
+import time
 
 from peewee import *
 
@@ -104,11 +105,11 @@ def read_json(req):
         data_dict = json.load(json_data)
     for value in data_dict.values():
         data_list.append(value)
-    # print(data_list)
     return data_list
 
 
 def check_file(req, val1):
+    """ Check if the file is accessible. """
     if os.path.isfile(req):
         val1
     else:
