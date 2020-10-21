@@ -1,9 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-from peewee import *
+from peewee import CharField
 
 from models import orm_data as od
-from misc import tools
 
 
 class Subcategory(od.BaseModel):

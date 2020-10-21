@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from peewee import *
+from peewee import fn, JOIN
 
 from models.product import Product
 from models.product_store import ProductStore
@@ -41,34 +41,37 @@ class Orm:
         return name_cat
 
     def save_data(self, list):
-        """ Check and save API's data to the database.
-        Used in append."""
+        """ Check and save API's data to the database."""
         list_old_product = []
         list_product = []
         list_error = []
         for line in list:
             # if product is not in the table (check with name and barcode)
-            query_pr = Product.select().where(Product.name == line[0], Product.barcode == line[3])
+            query_pr = Product.select().where(Product.name == line[0],
+                                              Product.barcode == line[3])
             if query_pr.exists():
                 list_old_product.append([line[0], line[3]])
                 pass
             else:  # save product
-                exe_pr = Product.insert(name=line[0], nutriscore=line[1], url=line[2],
+                exe_pr = Product.insert(name=line[0], nutriscore=line[1],
+                                        url=line[2],
                                         barcode=line[3], ingredient=line[4],
-                                        id_category=line[5], categories_hierarchy=line[7])
-                id_pr = exe_pr.execute()  # save the Product table id in id_pr variable
+                                        id_category=line[5],
+                                        categories_hierarchy=line[7])
+                id_pr = exe_pr.execute()  # save Product table id in id_pr
                 check_st = line[6]
-                if check_st is not None:  # if there is a store with the product
-                    for sto in check_st:  # for each store
-                        id_st = Store.select().where(Store.name == sto)  # check if store is in Store table
+                if check_st is not None:  # if there is a store with product
+                    for sto in check_st:  # check if store is in Store table
+                        id_st = Store.select().where(Store.name == sto)
                         if id_st.exists():
                             pass
                         else:
-                            Store.insert(name=sto).execute()  # create store in Store table
+                            Store.insert(name=sto).execute()  # create store
                             id_st = Store.select().where(Store.name == sto)
                         list_product.append([id_pr, id_st])
-                        try:  # save the relation between product and store in Product_store table
-                            ProductStore.insert(product_id=id_pr, store_id=id_st).execute()
+                        try:  # save relation between product & store
+                            ProductStore.insert(product_id=id_pr,
+                                                store_id=id_st).execute()
                         except:
                             list_error.append([id_pr, id_st])
         return list_old_product, list_product, list_error
@@ -94,7 +97,8 @@ class Orm:
 
     def list_prod(self, req):
         """ Request for the bests product, selected by nutriscore value. """
-        produ = Product.select().where(Product.id_category == req).order_by(Product.nutriscore.asc())
+        produ = Product.select().where(Product.id_category == req).\
+            order_by(Product.nutriscore.asc())
         return produ
 
     def find_store(self, req):
@@ -116,7 +120,8 @@ class Orm:
         """ req is the dict of best products
         req1 is the subcategory selected by user
         req2 is the product selected by user. """
-        Research.insert(id_product=req[req2], id_subcategory=req1, date=datetime.now()).execute()
+        Research.insert(id_product=req[req2],
+                        id_subcategory=req1, date=datetime.now()).execute()
 
     def read_research(self):
         """ Show the research saved.
@@ -124,8 +129,10 @@ class Orm:
         list_research = []
         # Use the many to many relation
         for row in Research \
-                .select(Research.id_subcategory, Research.id_product, Product.name.alias('product'),
-                        sc.name.alias('subcat'), Product.nutriscore, Product.ingredient, Product.url,
+                .select(Research.id_subcategory, Research.id_product,
+                        Product.name.alias('product'),
+                        sc.name.alias('subcat'), Product.nutriscore,
+                        Product.ingredient, Product.url,
                         Research.date) \
                 .join(Product) \
                 .switch(Research) \

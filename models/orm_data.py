@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-from peewee import *
+from peewee import Model
 
 from misc import tools
 
@@ -16,5 +16,3 @@ class UnknownField(object):
 class BaseModel(Model):
     class Meta:
         database = database
-
-

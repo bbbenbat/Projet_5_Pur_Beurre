@@ -4,13 +4,14 @@ import json
 import os.path
 import time
 
-from peewee import *
+from peewee import MySQLDatabase
 
 
 def check_value(name, min_int, max_int):
     """ Check if the values are correct """
     while True:
-        numb = input(f"-- {name} : Entrez une valeur comprise entre {min_int} et {max_int} : ")
+        numb = input(f"-- {name} : Entrez une valeur comprise "
+                     f"entre {min_int} et {max_int} : ")
         try:
             check = int(numb)
             if min_int <= check <= max_int:
@@ -54,7 +55,8 @@ def check_connection_db(req):
     """ Check if the database connection is established """
     try:
         database = MySQLDatabase('PUR_BEURRE',
-                                 **{'charset': 'utf8', 'sql_mode': 'PIPES_AS_CONCAT', 'use_unicode': True,
+                                 **{'charset': 'utf8', 'sql_mode':
+                                     'PIPES_AS_CONCAT', 'use_unicode': True,
                                     'user': 'ocr',
                                     'password': req})
         database.connect()
@@ -77,7 +79,8 @@ def pwd():
 
 
 def check_list(list_one, list_two):
-    """ Check that all values of list_one are as keys of list_two, else the key is created in list_two.*
+    """ Check that all values of list_one are as keys of list_two,
+    else the key is created in list_two.*
     Return the list_two with all keys."""
     list_one_p = list_one['products']
     new_list = []
@@ -113,5 +116,6 @@ def check_file(req, val1):
     if os.path.isfile(req):
         val1
     else:
-        print("Fichier \",req,\" absent. \nVeuillez le placer dans le dossier.")
+        print("Fichier \",req,\" absent."
+              "Veuillez le placer dans le dossier.")
         time.sleep(5.0)

@@ -10,20 +10,25 @@ class Console:
     """ Visual interface for the application."""
 
     def console(self):
-        """ Start menu, user can choice by find a substitute product or see the historic of research. """
+        """ Start menu, user can choice :find substitute product
+        or see the historic of research. """
         controle_point = 1
-        while controle_point == 1:  # While application is started
+        while controle_point == 1:
             sel_welcome = self.welcome_input()
             controle_point = 2
             if sel_welcome == 1:
                 while controle_point == 2:
                     controle_point = 3
-                    select_cate = self.categories()  # Print category.
-                    last_select_cat = len(select_cate) - 1  # Number of categories.
-                    user_cat = self.check_value('catégorie', 0, last_select_cat)
+                    # Print category.
+                    select_cate = self.categories()
+                    # Number of categories.
+                    last_select_cat = len(select_cate) - 1
+                    user_cat = self.check_value('catégorie',
+                                                0, last_select_cat)
                     while controle_point == 3:
-                        sub_categ = self.subcategories(orm_imp.select_sub_category(select_cate[user_cat]),
-                                                       select_cate[user_cat])  # Subcategories from category.
+                        sub_categ = self.subcategories(
+                            orm_imp.select_sub_category(select_cate[user_cat]),
+                            select_cate[user_cat])
                         user_prod = self.check_list_value('Produit', sub_categ)
                         controle_point = 4
                         while controle_point == 4:
@@ -41,7 +46,7 @@ class Console:
                                 "==========PUR BEURRE==========\n"
                                 "= Que souhaitez-vous faire ? =\n"
                                 "==============================\n"
-                                "Avoir un produit de remplacement plus sain : tapez 1\n"
+                                "Avoir un produit plus sain : tapez 1\n"
                                 "Voir mon historique de recherche : tape 2\n"
                                 ))
         return sel_welcome
@@ -67,8 +72,10 @@ class Console:
         return min_sub_cat
 
     def proposal_product(self, user_prod):
-        """ Show the best products and permit to save, make another research or go back to main section. """
-        prod0 = orm_imp.list_prod(user_prod)  # Give the bests product, selected by nutriscore value.
+        """ Show the best products and permit to save,
+        make another research or go back to main section. """
+        # Give the bests product, selected by nutriscore value.
+        prod0 = orm_imp.list_prod(user_prod)
         prod = self.show_proposal(prod0)
         user_choice = int(input(
             "==============================\n"
@@ -98,10 +105,11 @@ class Console:
         for prod in req:
             if z <= 5:
                 List_store = orm_imp.find_store(prod.id)
-                print("Choix numéro", z, ":", prod.name, "| score : ", prod.nutriscore, "| Magasins : ", List_store,
+                print("Choix numéro", z, ":", prod.name, "| score : ",
+                      prod.nutriscore, "| Magasins : ", List_store,
                       "| Lien :",
                       prod.url, "| \n ==> description :",
-                      prod.ingredient, "\n======================================================")
+                      prod.ingredient, "\n==================================")
                 self.dico_product.update({z: prod.id})
                 x += 1
             z += 1
@@ -110,17 +118,21 @@ class Console:
     def show_research(self):
         """ Show all research saved. """
         self.list_research = orm_imp.read_research()
-        print("==================================================================")
+        print("========================================================")
         for row in self.list_research:
             print(
-                row["date"], "|| Produit :", row['subcat'], "|| Meilleure proposition :", row['product'], "| Score :",
-                row['nutriscore'], "| Lien :", row['url'], "| Ingrédients :", row['ingredient'])
-            print("==================================================================")
+                row["date"], "|| Produit :", row['subcat'],
+                "|| Meilleure proposition :", row['product'], "| Score :",
+                row['nutriscore'], "| Lien :", row['url'],
+                "| Ingrédients :", row['ingredient'])
+            print("========================================================")
 
     def save_product(self, prod_0, prod_1, prod_2, user_prod):
         """ Save the product selected by user. prod_1: min number for the selection,
-        prod_2: max number, prod_0:dictionary with the best products, user_prod= subcategory id."""
-        print("=============================================\n= Quel produit souhaitez-vous sauvegarder ? =\n"
+        prod_2: max number, prod_0:dictionary with the best products,
+        user_prod= subcategory id."""
+        print("=============================================\n"
+              "= Quel produit souhaitez-vous sauvegarder ? =\n"
               "=============================================\n")
         choice = tools.check_value('Produit préféré', prod_1, prod_2)
         x = 0
@@ -133,12 +145,14 @@ class Console:
                 print("Erreur lors de l'enregistrement, tentative n°", x)
                 x += 1
                 if x == 3:
-                    print("Impossible d'enregistré cette recherche, veuillez recommencer.")
+                    print("Impossible d'enregistré cette recherche, "
+                          "veuillez recommencer.")
 
     def check_value(self, name, min_int, max_int):
         """ Check if the value is between min_int and max_int """
         while True:
-            numb = input(f"-- {name} : Entrez une valeur comprise entre {min_int} et {max_int} : ")
+            numb = input(f"-- {name} : Entrez une valeur comprise entre "
+                         f"{min_int} et {max_int} : ")
             try:
                 check = int(numb)
                 if min_int <= check <= max_int:
@@ -150,7 +164,8 @@ class Console:
     def check_list_value(self, name, list_int):
         """ Check if the value are in list_int """
         while True:
-            numb = input(f"-- {name} : Entrez une de ces valeurs : {list_int} : ")
+            numb = input(f"-- {name} : Entrez une de ces valeurs : "
+                         f"{list_int} : ")
             try:
                 check = int(numb)
                 if check in list_int:
