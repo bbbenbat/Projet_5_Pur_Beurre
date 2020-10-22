@@ -13,7 +13,7 @@ class Append_fb:
     def show_old_product(self, list_old_product):
         """ Show products already saved in database. """
         for req in list_old_product:
-            print("Existe déjà, PRODUIT :", req[0])
+            print("Existe déjà, Produit:", req[0], "| Code-barre:", req[1])
 
     def show_product(self, list_product):
         """ Show the products save to database. """

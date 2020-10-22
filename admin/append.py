@@ -14,7 +14,11 @@ class Api:
         """ Return the subcategories from subcategories.json """
         self.list_subcategories = tools.read_json('settings.json')
 
-    def api_subcategory(self, categ):
+    @property
+    def list_subcate(self):
+        return self.list_subcategories
+
+    def __api_subcategory(self, categ):
         """ function for API connexion for the subcategories."""
         API_URL = "https://fr.openfoodfacts.org/cgi/search.pl?"
         ACTION = "process"
@@ -41,7 +45,7 @@ class Api:
         data_api_checked = tools.check_list(data_api, FIELDS.split(','))
         return data_api_checked
 
-    def clean_data(self, x):
+    def __clean_data(self, x):
         """ Select and change the order of values, save in a list for the SQL upload
         Return a list for database insertion : list_sql."""
         list_sql = []
@@ -82,14 +86,14 @@ class Api:
         orm_imp.subcat(self.list_subcategories[0])
         for cate in name_cat:
             # to find the ID of the category in Subcategory table
-            data = self.api_subcategory(cate.name)
+            data = self.__api_subcategory(cate.name)
             # we create a global list with all dictionaries
             for row in data:
                 row['id_category'] = int(cate.id)
                 listAllProduct.append(row)
             # Call the function to create a list checked for the SQL
             # integration
-        all_product = self.clean_data(listAllProduct)
+        all_product = self.__clean_data(listAllProduct)
         # return the products already saved in database and errors from saving
         old_product = orm_imp.save_data(all_product)[0]
         list_error = orm_imp.save_data(all_product)[2]

@@ -11,7 +11,7 @@ These instructions will get you to use the application on your local machine
 Your local machine must have a mysql server installed with a database :
 name : pur_beurre
 user : ocr
-password : As you want(asked at start application)
+password : As you want(ask when starting the application)
 rules user : all privileges on this database
 
 ```
@@ -30,7 +30,6 @@ Check that the folder contains 5 folders:
     __init__.py,
     append.py,
     create.py,
-    settings.json
 - controllers : 
     __init__.py,
     orm.py
@@ -47,9 +46,12 @@ Check that the folder contains 5 folders:
     subcategory.py
 - views :
     __init__.py,
-    console.py
+    console.py,
+    append_feedback.py
+- main.py
 - readme.md
-- requirement.txt
+- requirements.txt
+- settings.json
 
 Launch the 'create.py' file from admin folder to create the tables into the Pur_Beurre database.
 
@@ -62,7 +64,8 @@ Enter the password for the user 'ocr'.
 Veuillez saisir le mot de passe de connexion:
 ```
 
-Launch the 'append.py' file to update the subcategories and the products into the Database. 
+Launch the 'main.py' , enter the database password and select 1 at the first question 
+("Souhaitez-vous mettre à jour les articles?") to update the subcategories and the products into the Database. 
 You can add benchmark products (the subcategories) by editing the 'settings.json' file and then relaunching the script.
 
 ```
@@ -91,27 +94,31 @@ You can change the page number and the number of products you want to download f
 ```
 
 Let the program download the data and save it to the local database.
-You can see the number of products registered on the last execution line.
+You can see the errors if exist.
 ```
-product 552 store : SELECT `t1`.`id`, `t1`.`name` FROM `store` AS `t1` WHERE (`t1`.`name` = 'coop')
-product 554 store : SELECT `t1`.`id`, `t1`.`name` FROM `store` AS `t1` WHERE (`t1`.`name` = 'leclerc')
-product 555 store : SELECT `t1`.`id`, `t1`.`name` FROM `store` AS `t1` WHERE (`t1`.`name` = 'monoprix')
+Existe déjà, Produit: Yaourt gourmand Pomme Cannelle au Lait entier | Code-barre: 3339526272002
+Existe déjà, Produit: Yaourt lit de pomme | Code-barre: 3463340005017
+Existe déjà, Produit: Crémeux sur lit de Pomme Cannelle | Code-barre: 4056489189473
 >
 ```
-You can add new products by launching the same script 'append.py' (change before the number of page on 
+You can add new products by the same way (change the page's number on 
 'settings.json' file).
 
 ## How to use
 
-Launch the 'console.py' file to start the program.
+Launch the 'main.py' file to start the program.
 
 ```
-> python console.py
+> python main.py
 ```
 Enter the password for the user 'ocr'.
 ```
-> python console.py
+> python main.py
 Veuillez saisir le mot de passe de connexion:
+```
+As explained, you can add new products or not.
+```
+Souhaitez-vous mettre à jour les articles?
 ```
 Type 1 to search for a substitute product or type 2 to see the selections you have saved.
 ```
@@ -135,7 +142,7 @@ Please go [CONTRIBUTING.md](https://github.com/bbbenbat/Projet_5_Pur_Beurre/pull
 
 ## Versioning
 
-Version 0.1
+Version 0.3
 
 ## Authors
 

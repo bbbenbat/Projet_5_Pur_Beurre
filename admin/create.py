@@ -8,16 +8,22 @@ from models import orm_data as od, subcategory as sc, \
 class CreateDbb:
     """ Start this class for the first installation or re-installation.
     Delete tables (if exist) and create it."""
-    def delete_dbb(self):
+
+    @property
+    def __delete_dbb(self):
         od.database.drop_tables([sc.Subcategory, pr.Product,
                                  rs.Research, st.Store, ps.ProductStore])
-
-    def create_dbb(self):
+    @property
+    def __create_dbb(self):
         od.database.create_tables([sc.Subcategory, pr.Product,
                                    rs.Research, st.Store, ps.ProductStore])
+
+    def exec_req(self):
+        self.__delete_dbb
+        self.__create_dbb
 
 
 if __name__ == '__main__':
     create_dbb = CreateDbb()
-    create_dbb.delete_dbb()
-    create_dbb.create_dbb()
+    create_dbb.exec_req()
+
