@@ -4,6 +4,8 @@ from controllers import orm
 from misc import tools
 
 orm_imp = orm.Orm()
+tools = tools.Tools()
+
 
 
 class Console:

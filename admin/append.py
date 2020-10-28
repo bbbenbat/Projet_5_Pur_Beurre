@@ -5,7 +5,9 @@ import requests
 
 from controllers import orm
 from misc import tools
+from models import product as pr
 
+tools = tools.Tools()
 
 class Api:
     """ All API data processing with registration in the database. """
@@ -77,6 +79,13 @@ class Api:
                     line["categories_hierarchy"])
                 list_sql.append(tupleSql)
         return list_sql
+
+    def check_data(self):
+        product = pr.Product.select().count()
+        if product != 0:
+            pass
+        else:
+            return 1
 
     def save_data(self):
         """ Update the subcategories, products in Pur Beurre database. """

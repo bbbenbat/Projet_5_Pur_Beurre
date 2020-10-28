@@ -1,5 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+"""  """
 from datetime import datetime
 
 from peewee import fn, JOIN
@@ -141,3 +142,5 @@ class Orm:
                 .dicts():
             list_research.append(row)
         return list_research
+
+
