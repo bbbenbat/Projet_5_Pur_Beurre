@@ -14,11 +14,10 @@ class CreateTables:
     def __delete_tables(self):
         """  """
         od.database.drop_tables([sc.Subcategory, pr.Product,
-                                       rs.Research, st.Store, ps.ProductStore])
+                                 rs.Research, st.Store, ps.ProductStore])
 
     @property
     def create_tables(self):
         """  """
         od.database.create_tables([sc.Subcategory, pr.Product,
-                                         rs.Research, st.Store, ps.ProductStore])
-
+                                   rs.Research, st.Store, ps.ProductStore])

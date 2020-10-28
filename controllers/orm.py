@@ -98,7 +98,7 @@ class Orm:
 
     def list_prod(self, req):
         """ Request for the bests product, selected by nutriscore value. """
-        produ = Product.select().where(Product.id_category == req).\
+        produ = Product.select().where(Product.id_category == req). \
             order_by(Product.nutriscore.asc())
         return produ
 
@@ -142,5 +142,3 @@ class Orm:
                 .dicts():
             list_research.append(row)
         return list_research
-
-

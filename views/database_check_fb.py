@@ -5,6 +5,7 @@ from controllers import database_check
 
 database_check = database_check.CheckDatabase()
 
+
 class DatabaseCheckFb:
 
     def check_connect(self, req):

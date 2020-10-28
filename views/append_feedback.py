@@ -8,7 +8,6 @@ api = append.Api()
 tools = tools.Tools()
 
 
-
 class AppendFb:
     """ Visual return from append.py. """
 

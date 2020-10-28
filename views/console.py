@@ -7,7 +7,6 @@ orm_imp = orm.Orm()
 tools = tools.Tools()
 
 
-
 class Console:
     """ Visual interface for the application."""
 

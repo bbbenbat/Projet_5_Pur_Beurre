@@ -9,6 +9,7 @@ from models import product as pr
 
 tools = tools.Tools()
 
+
 class Api:
     """ All API data processing with registration in the database. """
 

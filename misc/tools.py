@@ -26,7 +26,8 @@ class Tools:
     def check_list_value(self, name, list_int):
         """ Check if the values are correct """
         while True:
-            numb = input(f"-- {name} : Entrez une de ces valeurs : {list_int} : ")
+            numb = input(f"-- {name} : "
+                         f"Entrez une de ces valeurs : {list_int} : ")
             try:
                 check = int(numb)
                 if check in list_int:
@@ -56,8 +57,6 @@ class Tools:
         self.__db_cursor = self.__db_connection.cursor()
         self.db_cursor.execute("CREATE DATABASE IF NOT EXISTS"
                                " PUR_BEURRE CHARACTER SET 'utf8mb4';")
-
-
 
     def check_list(self, list_one, list_two):
         """ Check that all values of list_one are as keys of list_two,

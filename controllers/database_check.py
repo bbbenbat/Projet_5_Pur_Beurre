@@ -19,9 +19,10 @@ class CheckDatabase:
 
     def check_datab(self):
         try:
-            self.connector = mysql.connector.connect(user='ocr', password='Python2020',
-                                    host='localhost',
-                                    database='PUR_BEURRE')
+            self.connector = mysql.connector.connect(
+                user='ocr', password='Python2020',
+                host='localhost',
+                database='PUR_BEURRE')
         except:
             self.create_db()
             return 1
@@ -38,7 +39,7 @@ class CheckDatabase:
 
     def check_table_exists(self):
         self.check_datab()
-        table_name= 'product'
+        table_name = 'product'
         dbcur = self.connector.cursor()
         dbcur.execute(f"""
             SELECT COUNT(*)
@@ -51,6 +52,3 @@ class CheckDatabase:
         else:
             dbcur.close()
             return False
-
-
-
