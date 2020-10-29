@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module manages all datas' Api (connection to it and download to
+ local database."""
 
 import requests
 
@@ -82,6 +84,7 @@ class Api:
         return list_sql
 
     def check_data(self):
+        """ Check if there is data in database. """
         product = pr.Product.select().count()
         if product != 0:
             pass

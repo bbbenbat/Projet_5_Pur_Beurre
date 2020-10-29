@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class Research who manages the Research table. """
+
 from peewee import DateTimeField, ForeignKeyField
 
 from models import orm_data as od, subcategory as sc, product as pr

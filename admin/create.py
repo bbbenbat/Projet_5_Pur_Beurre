@@ -1,6 +1,6 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-
+""" This module creates all tables to the database. """
 
 from models import orm_data as od, subcategory as sc, \
     product as pr, product_store as ps, research as rs, store as st

@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module create the peewee connection to the database. """
+
 from peewee import Model
 
 from views import database_check_fb

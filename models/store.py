@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class Store who manages the Store table. """
+
 from peewee import CharField
 
 from models import orm_data as od

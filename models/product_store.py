@@ -1,5 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class ProductStore who manages
+the product_store table. """
+
 from peewee import ForeignKeyField
 
 from models import orm_data as od, product as pr, store as st

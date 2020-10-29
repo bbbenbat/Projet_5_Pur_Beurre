@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class AppendFb who manages the views from append
+ module."""
 
 from admin import append
 from misc import tools

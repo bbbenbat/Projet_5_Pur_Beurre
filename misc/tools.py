@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" Generic methode who can be used for generic needs. """
+
 import json
 import os.path
 import time
@@ -17,11 +19,19 @@ class Tools:
                          f"entre {min_int} et {max_int} : ")
             try:
                 check = int(numb)
-                if min_int <= check <= max_int:
+                if check == 99 or min_int <= check <= max_int:
                     break
             except ValueError:
                 pass
         return check
+
+    def check_value_break(self, user_enter, controle_point):
+        """ Check the user_enter value, change controle_point value. """
+        if user_enter == 99:
+            controle_point -= 1
+        else:
+            controle_point += 1
+        return controle_point
 
     def check_list_value(self, name, list_int):
         """ Check if the values are correct """
@@ -30,7 +40,7 @@ class Tools:
                          f"Entrez une de ces valeurs : {list_int} : ")
             try:
                 check = int(numb)
-                if check in list_int:
+                if check in list_int or check == 99:
                     break
             except ValueError:
                 pass

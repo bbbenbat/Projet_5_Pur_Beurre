@@ -1,5 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains a class to check if the database, tables exist
+ and can create the database. """
+
 import mysql.connector
 
 from peewee import MySQLDatabase
@@ -25,7 +28,6 @@ class CheckDatabase:
                 database='PUR_BEURRE')
         except:
             self.create_db()
-            return 1
 
     def check_connection_db(self, req):
         """ Check if the database connection is established """

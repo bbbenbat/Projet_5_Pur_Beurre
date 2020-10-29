@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class CreateFb who manages the views from create
+ module."""
 
 from admin import create
 from controllers import database_check

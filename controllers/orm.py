@@ -1,6 +1,8 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""  """
+""" This module contains a class who manages all Sql request via the
+ peewee module. """
+
 from datetime import datetime
 
 from peewee import fn, JOIN

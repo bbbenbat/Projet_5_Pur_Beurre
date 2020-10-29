@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class Product who manages the Product table. """
+
 from peewee import CharField, ForeignKeyField
 
 from models import orm_data as od, subcategory as sc

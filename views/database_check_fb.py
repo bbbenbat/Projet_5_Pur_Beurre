@@ -1,5 +1,7 @@
 # !/usr/bin/env python
 # -*- coding: utf-8 -*-
+""" This module contains the class DatabaseCheckFb who manages the views
+from database_check module."""
 
 from controllers import database_check
 
