@@ -54,6 +54,8 @@ class Console:
                                 "==============================\n"
                                 "Avoir un produit plus sain : tapez 1\n"
                                 "Voir mon historique de recherche : tape 2\n"
+                                "Taper 99 à tout moment pour "
+                                "revenir en arrière."
                                 ))
         return sel_welcome
 
