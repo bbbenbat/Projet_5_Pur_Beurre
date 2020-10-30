@@ -8,10 +8,10 @@ These instructions will get you to use the application on your local machine
 
 ### Prerequisites
 
-Your local machine must have a mysql server installed with a database :
-name : pur_beurre
-user : ocr
-password : As you want(ask when starting the application)
+Your local machine must have a MySQL server installed. 
+A user account must be created with all privileges.
+- user : ocr
+- password : As you want(ask when starting the application)
 rules user : all privileges on this database
 
 ```
@@ -20,6 +20,7 @@ CHARACTER SET 'utf8mb4';
 CREATE USER 'ocr'@'localhost' IDENTIFIED BY 'password';
 GRANT ALL PRIVILEGES ON pur_beurre. * TO 'ocr'@'localhost';
 ```
+The database 'pur_beurre' will be created automatically by starting the application.
 Install Python version 3.7, with the modules in the requirements.txt file.
 
 ### Installing

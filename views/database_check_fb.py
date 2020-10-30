@@ -33,5 +33,6 @@ class DatabaseCheckFb:
         check_create_db = database_check.check_datab()
         if check_create_db == 1:
             print("Création de la base de données...")
+            database_check.create_db()
         database = self.pwd()
         return database

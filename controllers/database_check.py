@@ -27,7 +27,7 @@ class CheckDatabase:
                 host='localhost',
                 database='PUR_BEURRE')
         except:
-            self.create_db()
+            return 1
 
     def check_connection_db(self, req):
         """ Check if the database connection is established """
@@ -40,6 +40,7 @@ class CheckDatabase:
         return database
 
     def check_table_exists(self):
+        """ Check if the table Product is created. """
         self.check_datab()
         table_name = 'product'
         dbcur = self.connector.cursor()
