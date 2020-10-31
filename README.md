@@ -4,23 +4,17 @@ Application created to find the products with the best nutriscore.
 
 ## Getting Started
 
-These instructions will get you to use the application on your local machine
+These instructions will get you to use the application on your local machine.
 
 ### Prerequisites
 
 Your local machine must have a MySQL server installed. 
-A user account must be created with all privileges.
-- user : ocr
-- password : As you want(ask when starting the application)
-rules user : all privileges on this database
+A user account ( named 'ocr' ) must be created with all privileges.
 
-```
-CREATE DATABASE IF NOT EXISTS PUR_BEURRE
-CHARACTER SET 'utf8mb4';
-CREATE USER 'ocr'@'localhost' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON pur_beurre. * TO 'ocr'@'localhost';
-```
-The database 'pur_beurre' will be created automatically by starting the application.
+The user password will be asked when starting the application.
+
+The database 'pur_beurre' will be created automatically by starting the application (if not exists).
+
 Install Python version 3.7, with the modules in the requirements.txt file.
 
 ### Installing
@@ -33,6 +27,7 @@ Check that the folder contains 5 folders:
     create.py,
 - controllers : 
     __init__.py,
+    database_check.py,
     orm.py
 - misc :
     __init__.py,
@@ -48,25 +43,27 @@ Check that the folder contains 5 folders:
 - views :
     __init__.py,
     console.py,
-    append_feedback.py
+    append_fb.py,
+    create_fb.py,
+    database_check_fb.py
 - main.py
 - readme.md
 - requirements.txt
 - settings.json
 
-Launch the 'create.py' file from admin folder to create the tables into the Pur_Beurre database.
 
+
+
+Launch the 'main.py' , enter the database password.
 ```
-> python create.py
-```
-Enter the password for the user 'ocr'.
-```
-> python create.py
+> python main.py
 Veuillez saisir le mot de passe de connexion:
 ```
+At the first starting, the application will create the database, 
+tables and download automatically the data from API.
 
-Launch the 'main.py' , enter the database password and select 1 at the first question 
-("Souhaitez-vous mettre à jour les articles?") to update the subcategories and the products into the Database. 
+The application will ask, for next time, if you want to download 
+other products into the database. 
 You can add benchmark products (the subcategories) by editing the 'settings.json' file and then relaunching the script.
 
 ```
