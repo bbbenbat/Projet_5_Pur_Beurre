@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """ This module contains the class DatabaseCheckFb who manages the views
 from database_check module."""
-
+from getpass import getpass
 
 from controllers import database_check
 
@@ -17,7 +17,8 @@ class DatabaseCheckFb:
          loop if the password is not good. """
         check = 0
         while check == 0:
-            pwd = input("Veuillez saisir le mot de passe de connexion:\n")
+            pwd = getpass(prompt='Veuillez saisir le mot de passe de '
+                                 'connexion:', stream=None)
             check = database_check.create_db(pwd)
             if check == 1:
                 print("Création de la base de données...")
