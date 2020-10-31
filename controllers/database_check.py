@@ -19,7 +19,7 @@ class CheckDatabase:
             self.__db_cursor = self.__db_connection.cursor()
             try:
                 self.__db_cursor.execute("CREATE DATABASE "
-                                         " PUR_BEURRE CHARACTER SET 'utf8mb4';")
+                                         "PUR_BEURRE CHARACTER SET 'utf8mb4';")
                 db = 1
             except:
                 db = 2
@@ -29,7 +29,8 @@ class CheckDatabase:
         return db
 
     def peew_connection_db(self, req):
-        """ Check with peewee module if the database connection is established """
+        """ Check with peewee module if the database
+        connection is established """
         database = MySQLDatabase('PUR_BEURRE',
                                  **{'charset': 'utf8', 'sql_mode':
                                      'PIPES_AS_CONCAT', 'use_unicode': True,
