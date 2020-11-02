@@ -45,20 +45,11 @@ class Api:
                       'page': PAGE,
                       'page_size': PAGE_SIZE,
                       'fields': FIELDS}
-        try:
-            res = requests.get(API_URL, parameters)
-            if res.status_code == 200:
-                # print("OK!!!")
-                # print("CATEG",categ)
-                data_api = res.json()
-                data_api_checked = tools.check_list(
-                    data_api, FIELDS.split(','))
-                return data_api_checked
-            else:
-                print("ERREUR CONNEXION!")
-        except requests.ConnectionError:
-            print("UNABLE TO CONNECT!", API_URL)
+        res = requests.get(API_URL, parameters)
+        data_api = res.json()
         # Check all fields are in data_api.Created with '' value if not.
+        data_api_checked = tools.check_list(data_api, FIELDS.split(','))
+        return data_api_checked
 
     def __clean_data(self, x):
         """ Select and change the order of values, save in a list for the SQL upload
