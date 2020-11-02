@@ -4,6 +4,7 @@
  local database."""
 
 import requests
+from tqdm import tqdm
 
 from controllers import orm
 from misc import tools
@@ -44,11 +45,20 @@ class Api:
                       'page': PAGE,
                       'page_size': PAGE_SIZE,
                       'fields': FIELDS}
-        res = requests.get(API_URL, parameters)
-        data_api = res.json()
+        try:
+            res = requests.get(API_URL, parameters)
+            if res.status_code == 200:
+                # print("OK!!!")
+                # print("CATEG",categ)
+                data_api = res.json()
+                data_api_checked = tools.check_list(
+                    data_api, FIELDS.split(','))
+                return data_api_checked
+            else:
+                print("ERREUR CONNEXION!")
+        except requests.ConnectionError:
+            print("UNABLE TO CONNECT!", API_URL)
         # Check all fields are in data_api.Created with '' value if not.
-        data_api_checked = tools.check_list(data_api, FIELDS.split(','))
-        return data_api_checked
 
     def __clean_data(self, x):
         """ Select and change the order of values, save in a list for the SQL upload
@@ -96,8 +106,9 @@ class Api:
         listAllProduct = []
         orm_imp = orm.Orm()
         name_cat = orm_imp.name_subcategory()
+        # update subcategories into the database.
         orm_imp.subcat(self.list_subcategories[0])
-        for cate in name_cat:
+        for cate in tqdm(name_cat):
             # to find the ID of the category in Subcategory table
             data = self.__api_subcategory(cate.name)
             # we create a global list with all dictionaries
@@ -106,6 +117,7 @@ class Api:
                 listAllProduct.append(row)
             # Call the function to create a list checked for the SQL
             # integration
+        orm_imp.rename_subcat()
         all_product = self.__clean_data(listAllProduct)
         # return the products already saved in database and errors from saving
         old_product = orm_imp.save_data(all_product)[0]
