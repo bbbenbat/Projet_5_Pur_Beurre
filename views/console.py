@@ -75,7 +75,7 @@ class Console:
         for sub in ssub_cat:
             select_sub_cat.update({sub.id: sub.name})
         for sub_cat in sorted(select_sub_cat.items(), key=lambda t: t[0]):
-            print(sub_cat[0], sub_cat[1])
+            print(sub_cat[0], sub_cat[1].replace('_', ' '))
             min_sub_cat.append(sub_cat[0])
         return min_sub_cat
 

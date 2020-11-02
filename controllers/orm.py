@@ -44,13 +44,6 @@ class Orm:
         name_cat = sc.select()
         return name_cat
 
-    def rename_subcat(self):
-        """ Clean subcategories names (delete '_') """
-        s_cat = sc.select()
-        for cat in s_cat:
-            new_name = (cat.name).replace('_', ' ')
-            sc.update(name=new_name).where(sc.name == cat.name).execute()
-
     def save_data(self, list):
         """ Check and save API's data to the database."""
         list_old_product = []
@@ -93,7 +86,7 @@ class Orm:
         select_cat = []
         s_cat = sc.select()
         for cat in s_cat:
-            cate = cat.name.split()[:1]
+            cate = cat.name.split('_')[:1]
             if cate[0] in select_cat:
                 pass
             else:

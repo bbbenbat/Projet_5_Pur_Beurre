@@ -117,7 +117,6 @@ class Api:
                 listAllProduct.append(row)
             # Call the function to create a list checked for the SQL
             # integration
-        orm_imp.rename_subcat()
         all_product = self.__clean_data(listAllProduct)
         # return the products already saved in database and errors from saving
         old_product = orm_imp.save_data(all_product)[0]
