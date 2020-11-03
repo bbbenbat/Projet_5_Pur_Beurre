@@ -36,7 +36,8 @@ class AppendFb:
             for req in sub_cat:
                 print("Ce produit de référence a été supprimé car il n'y a "
                       f"pas de produits correspondants : {req}. "
-                      "Veuillez vérifier le nom ou le supprimer du fichier settings.json ")
+                      "Veuillez vérifier le nom ou le "
+                      "supprimer du fichier settings.json ")
 
     def download_data(self):
         """ Save Api data to local database. """
