@@ -1,5 +1,5 @@
 {
-  "categories": [
+  "subcategories": [
     "pizza au thon",
     "pizza au fromage",
     "pizza au jambon",
@@ -14,5 +14,5 @@
     "jus de raisin"
   ],
   "page": 1,
-  "product_per_page": 100
+  "product_per_page": 50
 }
