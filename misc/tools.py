@@ -107,3 +107,10 @@ class Tools:
             print("Fichier \",req,\" absent."
                   "Veuillez le placer dans le dossier.")
             time.sleep(5.0)
+
+    def exit_app(self, req, req1):
+        """ close the programm with feedback. """
+        print("-----ERREUR CONNEXION!-----\n "
+              f"Veuillez verifier que ce produit existe : {req1}. "
+              f"Si oui, contacter le support {req}")
+        return exit()

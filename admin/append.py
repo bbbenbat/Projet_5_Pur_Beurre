@@ -45,11 +45,27 @@ class Api:
                       'page': PAGE,
                       'page_size': PAGE_SIZE,
                       'fields': FIELDS}
-        res = requests.get(API_URL, parameters)
+        """res = requests.get(API_URL, parameters)
         data_api = res.json()
         # Check all fields are in data_api.Created with '' value if not.
         data_api_checked = tools.check_list(data_api, FIELDS.split(','))
-        return data_api_checked
+        return data_api_checked"""
+        res = requests.get(API_URL, parameters)
+        # try:
+        if res.status_code == 200:
+            # print("OK!!!")
+            # print("CATEG",categ)
+            data_api = res.json()
+            data_api_checked = tools.check_list(
+                data_api, FIELDS.split(','))
+            return data_api_checked
+        else:
+            data_api_checked = []
+            return data_api_checked
+            # tools.exit_app('contact@openfoodfacts.org',categ)
+        # except requests.ConnectionError:
+        #    print("UNABLE TO CONNECT!", API_URL)
+        # Check all fields are in data_api.Created with '' value if not.
 
     def __clean_data(self, x):
         """ Select and change the order of values, save in a list for the SQL upload
@@ -96,9 +112,9 @@ class Api:
         """ Update the subcategories, products in Pur Beurre database. """
         listAllProduct = []
         orm_imp = orm.Orm()
-        name_cat = orm_imp.name_subcategory()
         # update subcategories into the database.
         orm_imp.subcat(self.list_subcategories[0])
+        name_cat = orm_imp.name_subcategory()
         for cate in tqdm(name_cat):
             # to find the ID of the category in Subcategory table
             data = self.__api_subcategory(cate.name)
@@ -112,4 +128,5 @@ class Api:
         # return the products already saved in database and errors from saving
         old_product = orm_imp.save_data(all_product)[0]
         list_error = orm_imp.save_data(all_product)[2]
-        return list_error, old_product
+        delete_subcat = orm_imp.clean_subcategory()
+        return list_error, old_product, delete_subcat

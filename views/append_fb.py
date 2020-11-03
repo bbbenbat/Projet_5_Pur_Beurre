@@ -28,12 +28,23 @@ class AppendFb:
         for req in list_error:
             print("Erreur sur:", req[0], req[1])
 
+    def show_delete_subcat(self, sub_cat):
+        """ Show the subcategories deleted."""
+        if not sub_cat:
+            pass
+        else:
+            for req in sub_cat:
+                print("Ce produit de référence a été supprimé car il n'y a "
+                      f"pas de produits correspondants : {req}. "
+                      "Veuillez vérifier le nom ou le supprimer du fichier settings.json ")
+
     def download_data(self):
         """ Save Api data to local database. """
         print("Mise à jour des produits en cours...")
         error = api.save_data()
         self.show_error(error[0])
         self.show_old_product(error[1])
+        self.show_delete_subcat(error[2])
 
     def start_append(self):
         """ Ask to user if he wants to save new products. """

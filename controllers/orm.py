@@ -44,6 +44,17 @@ class Orm:
         name_cat = sc.select()
         return name_cat
 
+    def clean_subcategory(self):
+        """ Delete the subcategories doesn't contained products. """
+        list_subcat = []
+        s_cat = sc.select()
+        for cat in s_cat:
+            prod = Product.select().where(Product.id_category == cat).count()
+            if prod == 0:
+                sc.delete().where(sc.name == cat.name).execute()
+                list_subcat.append(cat.name)
+        return list_subcat
+
     def save_data(self, list):
         """ Check and save API's data to the database."""
         list_old_product = []
@@ -145,3 +156,7 @@ class Orm:
                 .dicts():
             list_research.append(row)
         return list_research
+
+
+"""a = Orm()
+a.clean_subcategory()"""
