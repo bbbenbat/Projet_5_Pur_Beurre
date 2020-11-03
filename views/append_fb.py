@@ -43,7 +43,6 @@ class AppendFb:
         """ Save Api data to local database. """
         print("Mise à jour des produits en cours...")
         error = api.save_data()
-        self.show_error(error[0])
         self.show_old_product(error[1])
         self.show_delete_subcat(error[2])
 

@@ -120,7 +120,8 @@ class Api:
             # integration
         all_product = self.__clean_data(listAllProduct)
         # return the products already saved in database and errors from saving
-        old_product = orm_imp.save_data(all_product)[0]
-        list_error = orm_imp.save_data(all_product)[2]
+        feedback = orm_imp.save_data(all_product)
+        old_product = feedback[0]
+        list_error = feedback[2]
         delete_subcat = orm_imp.clean_subcategory()
         return list_error, old_product, delete_subcat
