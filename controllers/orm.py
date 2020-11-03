@@ -158,5 +158,4 @@ class Orm:
         return list_research
 
 
-"""a = Orm()
-a.clean_subcategory()"""
+

@@ -53,8 +53,6 @@ class Api:
         res = requests.get(API_URL, parameters)
         # try:
         if res.status_code == 200:
-            # print("OK!!!")
-            # print("CATEG",categ)
             data_api = res.json()
             data_api_checked = tools.check_list(
                 data_api, FIELDS.split(','))
@@ -62,10 +60,6 @@ class Api:
         else:
             data_api_checked = []
             return data_api_checked
-            # tools.exit_app('contact@openfoodfacts.org',categ)
-        # except requests.ConnectionError:
-        #    print("UNABLE TO CONNECT!", API_URL)
-        # Check all fields are in data_api.Created with '' value if not.
 
     def __clean_data(self, x):
         """ Select and change the order of values, save in a list for the SQL upload
